@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, Star, GitFork, Calendar, MapPin, Clock, Users, Folder } from "lucide-react";
+import { ArrowDown, Star, GitFork, Calendar, MapPin, Clock, Users, Folder, ExternalLink } from "lucide-react";
 
 export default function Overview() {
   const [mounted, setMounted] = useState(false);
@@ -17,7 +17,6 @@ export default function Overview() {
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
 
   useEffect(() => {
     setMounted(true);
@@ -44,19 +43,22 @@ export default function Overview() {
       title: "Heart Rate Detector",
       description: "PPG-based React Native app for heart rate analysis",
       tech: ["React Native", "TensorFlow", "Expo"],
-      link: "#projects"
+      link: "#projects",
+      icon: "❤️"
     },
     {
       title: "Blood Pressure Estimator", 
       description: "ML model for non-invasive BP estimation from facial videos",
       tech: ["Python", "OpenCV", "TensorFlow"],
-      link: "#projects"
+      link: "#projects",
+      icon: "🩺"
     },
     {
       title: "Voice Assistant",
       description: "AI-powered assistant using transformer models",
       tech: ["Python", "Transformers", "FastAPI"],
-      link: "#projects"
+      link: "#projects",
+      icon: "🎤"
     }
   ];
 
@@ -67,12 +69,25 @@ export default function Overview() {
   ];
 
   const techStack = [
-    { name: "Python", icon: "🐍" },
-    { name: "React Native", icon: "⚛️" },
-    { name: "TensorFlow", icon: "🧠" },
-    { name: "Pandas", icon: "🐼" },
-    { name: "TailwindCSS", icon: "🎨" },
-    { name: "Node.js", icon: "🟢" }
+    { name: "C++", icon: "⚡", category: "language" },
+    { name: "Python", icon: "🐍", category: "language" },
+    { name: "JavaScript", icon: "🟨", category: "language" },
+    { name: "TypeScript", icon: "🔷", category: "language" },
+    { name: "HTML", icon: "🌐", category: "frontend" },
+    { name: "CSS", icon: "🎨", category: "frontend" },
+    { name: "TailwindCSS", icon: "💨", category: "frontend" },
+    { name: "React", icon: "⚛️", category: "frontend" },
+    { name: "Next.js", icon: "▲", category: "frontend" },
+    { name: "Node.js", icon: "🟢", category: "backend" },
+    { name: "Express.js", icon: "🚂", category: "backend" },
+    { name: "MongoDB", icon: "🍃", category: "backend" },
+    { name: "MySQL", icon: "🐬", category: "backend" },
+    { name: "Django", icon: "🐍", category: "backend" },
+    { name: "AWS", icon: "☁️", category: "tools" },
+    { name: "Three.js", icon: "✨", category: "frontend" },
+    { name: "Git", icon: "📚", category: "tools" },
+    { name: "GitHub", icon: "🐙", category: "tools" },
+    { name: "Figma", icon: "🎨", category: "tools" }
   ];
 
   const activities = [
@@ -89,12 +104,12 @@ export default function Overview() {
 
   if (!mounted) {
     return (
-      <section ref={heroRef} className="relative flex min-h-screen flex-col items-center justify-center px-4 py-20 md:py-32">
+      <section ref={heroRef} className="relative flex min-h-screen flex-col items-center justify-center px-4 py-20">
         <div className="container mx-auto flex max-w-5xl flex-col items-center justify-center gap-8 md:flex-row md:gap-16">
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
-            <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl text-white">
+            <h1 className="mb-4 text-4xl font-bold md:text-5xl lg:text-6xl text-white">
               <span className="block">Hi, I&apos;m</span>
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#60a5fa] via-[#a78bfa] to-[#60a5fa] bg-[length:200%_auto] animate-gradient">
                 Anmol Roy
               </span>
             </h1>
@@ -105,22 +120,24 @@ export default function Overview() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen ">
       {/* Hero Section */}
       <motion.section
         ref={heroRef}
-        className="relative flex min-h-screen   flex-col items-center justify-center px-1 py-5 md:py-32 overflow-hidden"
+        className="relative flex min-h-screen flex-col items-center justify-center px-6 py-20"
         style={{ opacity }}
       >
-        <div className="container mx-auto flex  max-w-3xl flex-col items-center justify-center gap-4 md:flex-row md:gap-16">
+        <div className="container mx-auto flex max-w-5xl flex-col items-center justify-center gap-12 md:flex-row md:gap-16">
           <motion.div
             className="flex flex-col items-center text-center md:items-start md:text-left"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl text-white">
-              <span className="block">Hi, I&apos;m</span>
+            <motion.h1
+              className="mb-6 text-5xl font-bold md:text-6xl lg:text-7xl text-white"
+            >
+              <span className="block text-gray-300">Hi, I&apos;m</span>
               <motion.span
                 className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
                 animate={{ backgroundPosition: ["0% center", "100% center"] }}
@@ -129,10 +146,10 @@ export default function Overview() {
               >
                 Anmol Roy
               </motion.span>
-            </h1>
+            </motion.h1>
 
             <motion.p
-              className="mb-6 max-w-md text-lg text-blue-100"
+              className="mb-8 max-w-lg text-xl text-gray-300"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -148,9 +165,9 @@ export default function Overview() {
             >
               <motion.button
                 onClick={() => scrollToSection("projects")}
-                className="px-8 py-3 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:shadow-xl transition-all duration-300 border border-blue-400/30 shadow-lg shadow-blue-500/25"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 text-base font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 View Projects
               </motion.button>
@@ -163,12 +180,12 @@ export default function Overview() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="relative h-64 w-64 overflow-hidden border border-white/20 bg-white/10 shadow-xl backdrop-blur-md md:h-80 md:w-80 rounded-lg">
+            <div className="relative h-72 w-72 md:h-96 md:w-96 overflow-hidden rounded-lg border border-gray-700 bg-[#131337d8]">
               <Image
-                src="/profile.jpg?height=320&width=320"
+                src="/profile.jpg?height=384&width=384"
                 alt="Anmol Roy"
                 fill
-                className="object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                className="object-cover"
                 priority
               />
             </div>
@@ -180,45 +197,25 @@ export default function Overview() {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
-          <ArrowDown className="h-8 w-8 text-white" />
+          <ArrowDown className="h-8 w-8 text-gray-400" />
         </motion.div>
       </motion.section>
 
-      {/* GitHub-Style Overview Sections */}
-      <div className="max-w-4xl mx-auto px-6 py-8 space-y-10">
-        {/* About Me Summary */}
-        {/* <motion.section
+      {/* Content Sections */}
+      <div className="max-w-5xl mx-auto px-6 py-12 space-y-12">
+        {/* Quick Stats */}
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 backdrop-blur-sm"
         >
-          <h2 className="text-2xl font-semibold text-white mb-4">About Me</h2>
-          <div className="text-gray-300 space-y-4 text-lg">
-            <p>👋 Hey, I'm <strong>Anmol Roy</strong> — an AI & ML Developer passionate about creating intelligent mobile and web applications.</p>
-            <p>I love combining <strong>data science</strong> and <strong>React Native</strong> to turn innovative ideas into real-world solutions.</p>
-            <p className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              <span>🧠 Currently exploring <strong>Generative AI & Signal Processing</strong> for health-tech projects.</span>
-            </p>
-          </div>
-        </motion.section> */}
-
-        {/* Quick Stats */}
-        {/* <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          viewport={{ once: true }}
-          className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 backdrop-blur-sm"
-        >
+          <h2 className="text-2xl font-semibold text-white mb-6">Overview</h2>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {quickStats.map((stat, index) => (
               <motion.div
                 key={stat.label}
-                className="text-center p-4 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
-                whileHover={{ scale: 1.05 }}
+                className="text-center p-4 rounded-lg bg-[#131337d8] border border-gray-700"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -230,32 +227,33 @@ export default function Overview() {
               </motion.div>
             ))}
           </div>
-        </motion.section> */}
+        </motion.section>
 
-        {/* Pinned Projects Preview */}
-        {/* <motion.section
+        {/* Pinned Projects */}
+        <motion.section
           id="projects"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 backdrop-blur-sm"
         >
-          <h2 className="text-2xl font-semibold text-white mb-6">Pinned Projects</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <h2 className="text-2xl font-semibold text-white mb-6">Featured Projects</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {pinnedProjects.map((project, index) => (
               <motion.div
                 key={project.title}
-                className="border border-gray-700 rounded-lg p-4 hover:border-gray-500 transition-all duration-300 cursor-pointer group"
-                whileHover={{ y: -2 }}
+                className="border border-gray-700 rounded-lg p-4 bg-[#131337d8] hover:border-gray-500 transition-colors"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <h3 className="font-semibold text-white text-lg mb-2 group-hover:text-blue-400 transition-colors">
-                  {project.title}
-                </h3>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-xl">{project.icon}</span>
+                  <h3 className="font-semibold text-white text-lg">
+                    {project.title}
+                  </h3>
+                </div>
                 <p className="text-gray-400 text-sm mb-3">{project.description}</p>
                 <div className="flex flex-wrap gap-1 mb-4">
                   {project.tech.map((tech) => (
@@ -271,122 +269,125 @@ export default function Overview() {
                   href={project.link}
                   className="text-blue-400 text-sm hover:text-blue-300 transition-colors inline-flex items-center gap-1"
                 >
-                  See full project →
+                  View Details
+                  <ExternalLink className="w-4 h-4" />
                 </a>
               </motion.div>
             ))}
           </div>
-        </motion.section> */}
+        </motion.section>
 
         {/* Current Focus */}
-        {/* <motion.section
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 backdrop-blur-sm"
         >
-          <h2 className="text-2xl font-semibold text-white mb-4">🧠 Current Focus</h2>
-          <ul className="text-gray-300 space-y-3">
-            {currentFocus.map((focus, index) => (
-              <motion.li 
-                key={index}
-                className="flex items-start gap-3"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <span className="text-green-400 mt-1">•</span>
-                <span>{focus}</span>
-              </motion.li>
-            ))}
-          </ul>
-        </motion.section> */}
-
-        {/* Tech Stack Snapshot */}
-        {/* <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 backdrop-blur-sm"
-        >
-          <h2 className="text-2xl font-semibold text-white mb-4">🧰 Tech I Use</h2>
-          <div className="flex flex-wrap gap-3">
-            {techStack.map((tech, index) => (
-              <motion.span
-                key={tech.name}
-                className="px-4 py-2 bg-gray-800 rounded-lg text-gray-300 border border-gray-700 hover:border-gray-500 transition-colors flex items-center gap-2"
-                whileHover={{ scale: 1.05 }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <span>{tech.icon}</span>
-                <span>{tech.name}</span>
-              </motion.span>
-            ))}
+          <h2 className="text-2xl font-semibold text-white mb-4">Current Focus</h2>
+          <div className="border border-gray-700 rounded-lg p-6 bg-[#131337d8]">
+            <ul className="text-gray-300 space-y-3">
+              {currentFocus.map((focus, index) => (
+                <motion.li 
+                  key={index}
+                  className="flex items-start gap-3"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <span className="text-green-400 mt-1">•</span>
+                  <span>{focus}</span>
+                </motion.li>
+              ))}
+            </ul>
           </div>
-        </motion.section> */}
+        </motion.section>
+
+        {/* Skills Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-2xl font-semibold text-white mb-6">Skills</h2>
+          <div className="border border-gray-700 rounded-lg p-6 bg-[#131337d8]">
+            <div className="flex flex-wrap gap-3">
+              {techStack.map((tech, index) => (
+                <motion.div
+                  key={tech.name}
+                  className="px-4 py-2 bg-[#21215ad8] rounded-lg text-white border border-gray-600 flex items-center gap-2"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.03 }}
+                  viewport={{ once: true }}
+                >
+                  <span>{tech.icon}</span>
+                  <span className="font-medium">{tech.name}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.section>
 
         {/* Recent Activity */}
-        {/* <motion.section
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 backdrop-blur-sm"
         >
           <h2 className="text-2xl font-semibold text-white mb-4">Recent Activity</h2>
-          <div className="space-y-4">
-            {activities.map((activity, index) => (
-              <motion.div 
-                key={index}
-                className="flex items-start gap-4 py-2"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex-shrink-0 w-3 h-3 bg-green-500 rounded-full mt-2"></div>
-                <div>
-                  <p className="text-gray-300">{activity.description}</p>
-                  <p className="text-gray-500 text-sm">{activity.date}</p>
-                </div>
-              </motion.div>
-            ))}
+          <div className="border border-gray-700 rounded-lg p-6 bg-[#131337d8]">
+            <div className="space-y-4">
+              {activities.map((activity, index) => (
+                <motion.div 
+                  key={index}
+                  className="flex items-start gap-4 py-2"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="flex-shrink-0 w-3 h-3 bg-green-500 rounded-full mt-2"></div>
+                  <div>
+                    <p className="text-gray-300">{activity.description}</p>
+                    <p className="text-gray-500 text-sm">{activity.date}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </motion.section> */}
+        </motion.section>
 
         {/* Achievements */}
-        {/* <motion.section
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 backdrop-blur-sm"
         >
           <h2 className="text-2xl font-semibold text-white mb-4">Achievements</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {achievements.map((achievement, index) => (
-              <motion.div
-                key={achievement.title}
-                className="text-center p-4 border border-gray-700 rounded-lg hover:border-gray-500 transition-colors"
-                whileHover={{ y: -2 }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <div className="text-3xl mb-2">{achievement.icon}</div>
-                <h3 className="text-white font-medium mb-1">{achievement.title}</h3>
-                <p className="text-gray-400 text-sm">{achievement.year}</p>
-              </motion.div>
-            ))}
+          <div className="border border-gray-700 rounded-lg p-6 bg-[#131337d8]">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {achievements.map((achievement, index) => (
+                <motion.div
+                  key={achievement.title}
+                  className="text-center p-4 border border-gray-600 rounded-lg bg-[#21215ad8]"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="text-3xl mb-2">{achievement.icon}</div>
+                  <h3 className="text-white font-medium mb-1">{achievement.title}</h3>
+                  <p className="text-gray-400 text-sm">{achievement.year}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </motion.section> */}
+        </motion.section>
       </div>
     </div>
   );
