@@ -314,7 +314,7 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
                   onClick={() => setActiveSection(item.id)}
                   whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`relative px-3 py-[10px] text-sm font-medium transition-all duration-300 flex items-center space-x-0 rounded-lg mx-0 ${
+                  className={`relative px-3 py-[10px] text-sm font-medium transition-all duration-300 flex items-center space-x-1 rounded-lg mx-0 ${
                     activeSection === item.id
                       ? "text-white"
                       : "text-gray-300 hover:text-white hover:bg-white/5"

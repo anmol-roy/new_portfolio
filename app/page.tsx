@@ -8,6 +8,7 @@ import CaseStudies from "../components/sections/CaseStudies";
 import TechStack from "../components/sections/TechStack";
 import Achievements from "../components/sections/Achievements";
 import Contact from "../components/sections/Contact";
+import AnimatedCursor from "../components/AnimatedCursor";
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("overview");

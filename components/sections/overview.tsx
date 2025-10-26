@@ -109,10 +109,10 @@ export default function Overview() {
       {/* Hero Section */}
       <motion.section
         ref={heroRef}
-        className="relative flex min-h-screen flex-col items-center justify-center px-4 py-20 md:py-32"
+        className="relative flex min-h-screen   flex-col items-center justify-center px-1 py-5 md:py-32 overflow-hidden"
         style={{ opacity }}
       >
-        {/* <div className="container mx-auto flex max-w-5xl flex-col items-center justify-center gap-8 md:flex-row md:gap-16">
+        <div className="container mx-auto flex  max-w-3xl flex-col items-center justify-center gap-4 md:flex-row md:gap-16">
           <motion.div
             className="flex flex-col items-center text-center md:items-start md:text-left"
             initial={{ opacity: 0, y: 20 }}
@@ -173,7 +173,7 @@ export default function Overview() {
               />
             </div>
           </motion.div>
-        </div> */}
+        </div>
 
         <motion.div
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
