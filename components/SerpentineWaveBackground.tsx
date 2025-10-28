@@ -194,35 +194,38 @@ export default function SerpentineWaveWithStars() {
           </svg>
         </div>
 
-        {/* Static stars preview */}
-        <div className="absolute inset-0 opacity-0">
-          {stars.slice(0, 20).map((star) => (
-            <div
-              key={`star-static-${star.id}`}
-              className="absolute"
-              style={{
-                width: star.size * 3,
-                height: star.size * 3,
-                left: `${star.left}%`,
-                top: `${star.top}%`,
-                opacity: star.opacity,
-              }}
-            >
-              <svg
-                width="100%"
-                height="100%"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                  fill={star.color}
-                />
-              </svg>
-            </div>
-          ))}
-        </div>
+        {/* Static stars preview - only show if we have stars data */}
+{/* Static stars preview - only show if we have stars data */}
+{stars.length > 0 && (
+  <div className="absolute inset-0 opacity-0">
+    {stars.slice(0, 20).map((star) => (
+      <div
+        key={`star-static-${star.id}`}
+        className="absolute"
+        style={{
+          width: star.size * 3,
+          height: star.size * 3,
+          left: `${star.left}%`,
+          top: `${star.top}%`,
+          opacity: star.opacity,
+        }}
+      >
+        <svg
+          width="100%"
+          height="100%"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+            fill={star.color}
+          />
+        </svg>
+      </div>
+    ))}
+  </div>
+)}
       </div>
     );
   }

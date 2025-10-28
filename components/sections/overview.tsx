@@ -1,13 +1,43 @@
 // @ts-nocheck
 "use client";
-
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Star, GitFork, Calendar, MapPin, Clock, Users, Folder, ExternalLink } from "lucide-react";
 
+// Typing Animation Component
+const TypingAnimation = ({ text, delay = 150, onComplete }) => {
+  const [displayText, setDisplayText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timer = setTimeout(() => {
+        setDisplayText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, delay);
+      
+      return () => clearTimeout(timer);
+    } else if (!isComplete) {
+      setIsComplete(true);
+      onComplete?.();
+    }
+  }, [currentIndex, delay, text, isComplete, onComplete]);
+
+  return (
+    <span>
+      {displayText}
+      {!isComplete && (
+        <span className="animate-pulse ml-1">|</span>
+      )}
+    </span>
+  );
+};
+
 export default function Overview() {
   const [mounted, setMounted] = useState(false);
+  const [typingComplete, setTypingComplete] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -16,11 +46,14 @@ export default function Overview() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleTypingComplete = () => {
+    setTypingComplete(true);
+  };
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -102,17 +135,25 @@ export default function Overview() {
     { icon: "🎓", title: "Presented ML Project at IIIT", year: "2024" }
   ];
 
-  if (!mounted) {
+  // Show typing animation until both mounted AND typing is complete
+  if (!mounted || !typingComplete) {
     return (
       <section ref={heroRef} className="relative flex min-h-screen flex-col items-center justify-center px-4 py-20">
         <div className="container mx-auto flex max-w-5xl flex-col items-center justify-center gap-8 md:flex-row md:gap-16">
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <h1 className="mb-4 text-4xl font-bold md:text-5xl lg:text-6xl text-white">
               <span className="block">Hi, I&apos;m</span>
-              <span className="bg-gradient-to-r from-[#60a5fa] via-[#a78bfa] to-[#60a5fa] bg-[length:200%_auto] animate-gradient">
-                Anmol Roy
+              <span className="bg-gradient-to-r from-[#60a5fa] via-[#a78bfa] to-[#60a5fa] bg-[length:200%_auto] animate-gradient text-transparent bg-clip-text">
+                <TypingAnimation 
+                  text="Anmol Roy" 
+                  delay={150} 
+                  onComplete={handleTypingComplete}
+                />
               </span>
             </h1>
+            <p className="text-xl text-gray-300 mt-4">
+              AI & ML Developer
+            </p>
           </div>
         </div>
       </section>
@@ -125,7 +166,6 @@ export default function Overview() {
       <motion.section
         ref={heroRef}
         className="relative flex min-h-screen flex-col items-center justify-center px-6 py-20"
-        style={{ opacity }}
       >
         <div className="container mx-auto flex max-w-5xl flex-col items-center justify-center gap-12 md:flex-row md:gap-16">
           <motion.div
@@ -165,7 +205,7 @@ export default function Overview() {
             >
               <motion.button
                 onClick={() => scrollToSection("projects")}
-                className="px-8 py-4 text-base font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-8 py-4 text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -180,7 +220,7 @@ export default function Overview() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="relative h-72 w-72 md:h-96 md:w-96 overflow-hidden rounded-lg border border-gray-700 bg-[#131337d8]">
+            <div className="relative h-72 w-72 md:h-96 md:w-96 overflow-hidden rounded-md border border-gray-700 bg-[#131337d8]">
               <Image
                 src="/profile.jpg?height=384&width=384"
                 alt="Anmol Roy"
@@ -215,7 +255,7 @@ export default function Overview() {
             {quickStats.map((stat, index) => (
               <motion.div
                 key={stat.label}
-                className="text-center p-4 rounded-lg bg-[#131337d8] border border-gray-700"
+                className="text-center p-4 rounded-md bg-[#131337d8] border border-gray-700"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -242,7 +282,7 @@ export default function Overview() {
             {pinnedProjects.map((project, index) => (
               <motion.div
                 key={project.title}
-                className="border border-gray-700 rounded-lg p-4 bg-[#131337d8] hover:border-gray-500 transition-colors"
+                className="border border-gray-700 rounded-md p-4 bg-[#131337d8] hover:border-gray-500 transition-colors"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -285,7 +325,7 @@ export default function Overview() {
           viewport={{ once: true }}
         >
           <h2 className="text-2xl font-semibold text-white mb-4">Current Focus</h2>
-          <div className="border border-gray-700 rounded-lg p-6 bg-[#131337d8]">
+          <div className="border border-gray-700 rounded-md p-6 bg-[#131337d8]">
             <ul className="text-gray-300 space-y-3">
               {currentFocus.map((focus, index) => (
                 <motion.li 
@@ -312,12 +352,12 @@ export default function Overview() {
           viewport={{ once: true }}
         >
           <h2 className="text-2xl font-semibold text-white mb-6">Skills</h2>
-          <div className="border border-gray-700 rounded-lg p-6 bg-[#131337d8]">
+          <div className="border border-gray-700 rounded-md p-6 bg-[#131337d8]">
             <div className="flex flex-wrap gap-3">
               {techStack.map((tech, index) => (
                 <motion.div
                   key={tech.name}
-                  className="px-4 py-2 bg-[#21215ad8] rounded-lg text-white border border-gray-600 flex items-center gap-2"
+                  className="px-4 py-2 bg-[#21215ad8] rounded-md text-white border border-gray-600 flex items-center gap-2"
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3, delay: index * 0.03 }}
@@ -339,7 +379,7 @@ export default function Overview() {
           viewport={{ once: true }}
         >
           <h2 className="text-2xl font-semibold text-white mb-4">Recent Activity</h2>
-          <div className="border border-gray-700 rounded-lg p-6 bg-[#131337d8]">
+          <div className="border border-gray-700 rounded-md p-6 bg-[#131337d8]">
             <div className="space-y-4">
               {activities.map((activity, index) => (
                 <motion.div 
@@ -369,12 +409,12 @@ export default function Overview() {
           viewport={{ once: true }}
         >
           <h2 className="text-2xl font-semibold text-white mb-4">Achievements</h2>
-          <div className="border border-gray-700 rounded-lg p-6 bg-[#131337d8]">
+          <div className="border border-gray-700 rounded-md p-6 bg-[#131337d8]">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {achievements.map((achievement, index) => (
                 <motion.div
                   key={achievement.title}
-                  className="text-center p-4 border border-gray-600 rounded-lg bg-[#21215ad8]"
+                  className="text-center p-4 border border-gray-600 rounded-md bg-[#21215ad8]"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { Star, GitFork, Calendar, Users, Folder, ExternalLink } from 'lucide-react';
 
 interface TechCategory {
   id: string;
@@ -313,22 +314,27 @@ const TechCard = ({ tech }: { tech: TechItem }) => {
         scale: 1.02,
         y: -5
       }}
-      className={`relative p-6 rounded-xl border backdrop-blur-sm transition-all duration-300 group overflow-hidden ${tech.color}`}
+      className={`relative p-6 rounded-lg bg-[#131337d8] border border-gray-700 backdrop-blur-sm transition-all duration-300 group overflow-hidden hover:border-gray-500`}
     >
-      {/* Background Gradient */}
-      <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 ${category?.gradient}`} />
-      
       {/* Learning/Favorite Badge */}
       <div className="absolute top-3 right-3 flex gap-1">
         {tech.isLearning && (
-          <span className="px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs border border-yellow-500/30">
+          <motion.span 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded-md text-xs border border-yellow-500/30"
+          >
             Learning
-          </span>
+          </motion.span>
         )}
         {tech.isFavorite && (
-          <span className="px-2 py-1 bg-red-500/20 text-red-300 rounded-full text-xs border border-red-500/30">
+          <motion.span 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="px-2 py-1 bg-red-500/20 text-red-300 rounded-md text-xs border border-red-500/30"
+          >
             Favorite
-          </span>
+          </motion.span>
         )}
       </div>
 
@@ -360,8 +366,13 @@ const TechCard = ({ tech }: { tech: TechItem }) => {
         <span className="text-white font-semibold">{tech.projects}+</span>
       </div>
 
-      {/* Hover Border */}
-      <div className={`absolute inset-0 rounded-xl border-2 opacity-0 group-hover:opacity-2 transition-opacity duration-300 ${category?.gradient.replace('bg-gradient-to-r', 'bg-gradient-to-r')}`} />
+      {/* Active Section Indicator */}
+      <motion.div
+        initial={{ opacity: 0, scaleX: 0 }}
+        whileHover={{ opacity: 1, scaleX: 1 }}
+        transition={{ duration: 0.3 }}
+        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400"
+      />
     </motion.div>
   );
 };
@@ -372,7 +383,9 @@ const CategorySection = ({ category }: { category: TechCategory }) => {
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
       className="mb-12"
     >
       {/* Category Header */}
@@ -380,23 +393,24 @@ const CategorySection = ({ category }: { category: TechCategory }) => {
         className="flex items-center gap-4 mb-6"
         whileHover={{ x: 10 }}
       >
-        <div className={`p-3 rounded-xl ${category.gradient} text-white text-2xl`}>
+        <div className={`p-3 rounded-lg ${category.gradient} text-white text-2xl`}>
           {category.icon}
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-white">{category.name}</h2>
+          <h2 className="text-2xl font-semibold text-white">{category.name}</h2>
           <p className="text-gray-400">{category.description}</p>
         </div>
       </motion.div>
 
       {/* Tech Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {categoryTech.map((tech, index) => (
           <motion.div
             key={tech.id}
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.1 }}
+            viewport={{ once: true }}
           >
             <TechCard tech={tech} />
           </motion.div>
@@ -411,43 +425,50 @@ const StatsSection = () => {
     {
       number: techStack.length,
       label: 'Technologies',
-      icon: '🛠️'
+      icon: Folder,
+      color: 'text-blue-400'
     },
     {
       number: techStack.reduce((acc, tech) => acc + tech.projects, 0),
       label: 'Total Projects',
-      icon: '🚀'
+      icon: Users,
+      color: 'text-green-400'
     },
     {
       number: techStack.filter(tech => tech.level >= 4).length,
       label: 'Advanced Skills',
-      icon: '⭐'
+      icon: Star,
+      color: 'text-yellow-400'
     },
     {
       number: techStack.filter(tech => tech.isLearning).length,
       label: 'Currently Learning',
-      icon: '📚'
+      icon: Calendar,
+      color: 'text-purple-400'
     }
   ];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+      className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
     >
       {stats.map((stat, index) => (
         <motion.div
           key={stat.label}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: index * 0.1 }}
-          whileHover={{ scale: 1.05, y: -5 }}
-          className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl border border-gray-700 text-center backdrop-blur-sm"
+          className="text-center p-4 rounded-lg bg-[#131337d8] border border-gray-700"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: index * 0.1 }}
+          viewport={{ once: true }}
+          whileHover={{ y: -5 }}
         >
-          <div className="text-2xl mb-2">{stat.icon}</div>
-          <div className="text-3xl font-bold text-white mb-1">{stat.number}</div>
-          <div className="text-gray-400 text-sm">{stat.label}</div>
+          <stat.icon className={`w-6 h-6 ${stat.color} mx-auto mb-2`} />
+          <div className="text-2xl font-bold text-white">{stat.number}</div>
+          <div className="text-sm text-gray-400">{stat.label}</div>
         </motion.div>
       ))}
     </motion.div>
@@ -462,72 +483,69 @@ export default function TechStack() {
     : techCategories.filter(cat => cat.id === activeCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f0f230e] via-[#1a1a2e00] to-[#16213e00] text-white py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+    <div className="min-h-screen bg-[#05032900]">
+      <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
+        {/* Header Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
         >
-          <motion.h1 
-            className="text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            Tech Stack
-          </motion.h1>
+          <h2 className="text-2xl font-semibold text-white mb-6">Tech Stack</h2>
+          
           <motion.p
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            whileInView={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed"
+            viewport={{ once: true }}
+            className="text-xl text-gray-300 max-w-3xl mb-8 leading-relaxed"
           >
             Technologies, tools, and frameworks I use to bring ideas to life. 
             Continuously learning and adapting to build better solutions.
           </motion.p>
-        </motion.div>
 
-        {/* Stats */}
-        <StatsSection />
+          {/* Stats */}
+          <StatsSection />
 
-        {/* Category Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="flex flex-wrap gap-3 mb-8 justify-center"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setActiveCategory('all')}
-            className={`px-6 py-3 rounded-full border transition-all duration-300 ${
-              activeCategory === 'all'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white border-transparent'
-                : 'bg-gray-800/50 text-gray-300 border-gray-600 hover:border-gray-400'
-            }`}
+          {/* Category Filter */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            viewport={{ once: true }}
+            className="flex flex-wrap gap-3 mb-8"
           >
-            All Technologies
-          </motion.button>
-          {techCategories.map((category) => (
             <motion.button
-              key={category.id}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, y: -1 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveCategory(category.id)}
-              className={`px-6 py-3 rounded-full border transition-all duration-300 flex items-center gap-2 ${
-                activeCategory === category.id
-                  ? `${category.gradient} text-white border-transparent`
-                  : 'bg-gray-800/50 text-gray-300 border-gray-600 hover:border-gray-400'
+              onClick={() => setActiveCategory('all')}
+              className={`px-6 py-3 rounded-lg border transition-all duration-300 ${
+                activeCategory === 'all'
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white border-transparent'
+                  : 'bg-[#131337d8] text-gray-300 border-gray-700 hover:border-gray-500'
               }`}
             >
-              <span>{category.icon}</span>
-              <span>{category.name}</span>
+              All Technologies
             </motion.button>
-          ))}
-        </motion.div>
+            {techCategories.map((category) => (
+              <motion.button
+                key={category.id}
+                whileHover={{ scale: 1.05, y: -1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setActiveCategory(category.id)}
+                className={`px-6 py-3 rounded-lg border transition-all duration-300 flex items-center gap-2 ${
+                  activeCategory === category.id
+                    ? `${category.gradient} text-white border-transparent`
+                    : 'bg-[#131337d8] text-gray-300 border-gray-700 hover:border-gray-500'
+                }`}
+              >
+                <span>{category.icon}</span>
+                <span>{category.name}</span>
+              </motion.button>
+            ))}
+          </motion.div>
+        </motion.section>
 
         {/* Tech Stack by Category */}
         <div className="space-y-12">
@@ -535,8 +553,9 @@ export default function TechStack() {
             <motion.div
               key={category.id}
               initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.2 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+              viewport={{ once: true }}
             >
               <CategorySection category={category} />
             </motion.div>
@@ -546,23 +565,24 @@ export default function TechStack() {
         {/* Learning Journey */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 backdrop-blur-sm"
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="p-6 rounded-lg bg-[#131337d8] border border-gray-700"
         >
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-white mb-4">Continuous Learning Journey</h2>
-            <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            <h2 className="text-2xl font-semibold text-white mb-4">Continuous Learning Journey</h2>
+            <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed mb-6">
               Technology evolves rapidly, and so do I. Currently exploring new frontiers in 
               cloud architecture, AI/ML integration, and performance optimization to build 
               the next generation of web applications.
             </p>
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mt-6 text-white font-semibold cursor-pointer"
+              whileHover={{ scale: 1.05, y: -1 }}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg text-white font-semibold cursor-pointer"
             >
               <span>View Learning Roadmap</span>
-              <span>→</span>
+              <ExternalLink className="w-4 h-4" />
             </motion.div>
           </div>
         </motion.section>

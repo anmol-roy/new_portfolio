@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Define the props interface
@@ -10,6 +10,40 @@ interface ModernHeaderProps {
 
 export default function ModernHeader({ activeSection, setActiveSection }: ModernHeaderProps) {
   const [isConnectOpen, setIsConnectOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+
+  // Handle scroll to hide/show header
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    const updateScroll = () => {
+      setHidden(window.scrollY > lastScrollY && window.scrollY > 100);
+      lastScrollY = window.scrollY;
+    };
+    window.addEventListener("scroll", updateScroll);
+    return () => window.removeEventListener("scroll", updateScroll);
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest(".connect-dropdown")) {
+        setIsConnectOpen(false);
+      }
+    };
+    if (isConnectOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isConnectOpen]);
+
+  // Prevent background scroll when dropdown is open
+  useEffect(() => {
+    document.body.style.overflow = isConnectOpen ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isConnectOpen]);
 
   const navItems = [
     {
@@ -171,19 +205,23 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
     },
   ];
 
-  const handleResumeDownload = () => {
+  const handleResumeDownload = useCallback(() => {
     const link = document.createElement("a");
     link.href = "/resume.pdf";
     link.download = "Anmol_Roy_Resume.pdf";
     link.click();
-  };
+  }, []);
+
+  const toggleConnectMenu = useCallback(() => {
+    setIsConnectOpen((prev) => !prev);
+  }, []);
 
   return (
     <motion.header
       initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#0a0339]/100 border-b border-white/20"
+      animate={{ y: hidden ? -100 : 0, opacity: 1 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-gradient-to-b from-[#0a0339]/95 to-[#0a0339]/70 border-b border-white/20"
     >
       {/* Top Row: Logo, Name, and Buttons */}
       <div>
@@ -203,7 +241,7 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
                 </div>
               </div>
               <div className="flex flex-col">
-                <span className="text-white font-bold text-l tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white font-bold text-lg tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                   Anmol Roy
                 </span>
               </div>
@@ -218,7 +256,7 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
                 whileTap={{ scale: 0.95 }}
                 className="px-3 py-2 text-sm font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-blue-500/10"
               >
-                <span className=""> Resume</span>
+                <span>Resume</span>
                 <svg
                   className="w-4 h-4"
                   fill="none"
@@ -235,14 +273,17 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
               </motion.button>
 
               {/* Connect Button with Dropdown */}
-              <div className="relative">
+              <div className="relative connect-dropdown">
                 <motion.button
-                  onClick={() => setIsConnectOpen(!isConnectOpen)}
+                  onClick={toggleConnectMenu}
+                  aria-haspopup="menu"
+                  aria-expanded={isConnectOpen}
+                  aria-controls="connect-menu"
                   whileHover={{ scale: 1.05, y: -1 }}
                   whileTap={{ scale: 0.95 }}
                   className="px-3 py-2 text-sm font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-blue-500/10"
                 >
-                  <span>connect</span>
+                  <span>Connect</span>
                   <motion.div
                     animate={{ rotate: isConnectOpen ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
@@ -267,6 +308,8 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
                 <AnimatePresence>
                   {isConnectOpen && (
                     <motion.div
+                      id="connect-menu"
+                      role="menu"
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -289,6 +332,7 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
                             transition={{ delay: index * 0.1 }}
                             whileHover={{ scale: 1.02, x: 5 }}
                             className={`flex items-center space-x-3 w-full px-3 py-3 text-sm text-white rounded-lg transition-all duration-200 ${social.color} hover:bg-opacity-20 border border-transparent hover:border-white/10`}
+                            role="menuitem"
                           >
                             <div className="flex items-center justify-center w-5 h-5">
                               {social.icon}
@@ -307,34 +351,38 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
 
         <div>
           <div className="flex items-center justify-items-start mx-3 h-10">
-            <nav className="flex items-center space-x-1">
-              {navItems.map((item) => (
-                <motion.button
-                  key={item.id}
-                  onClick={() => setActiveSection(item.id)}
-                  whileHover={{ scale: 1.02, y: -1 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`relative px-3 py-[10px] text-sm font-medium transition-all duration-300 flex items-center space-x-1 rounded-lg mx-0 ${
-                    activeSection === item.id
-                      ? "text-white"
-                      : "text-gray-300 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {item.icon}
-                  <span className="font-medium">{item.label}</span>
-                  {activeSection === item.id && (
-                    <motion.div
-                      layoutId="activeSection"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400"
-                      transition={{
-                        type: "spring",
-                        bounce: 0.2,
-                        duration: 0.6,
-                      }}
-                    />
-                  )}
-                </motion.button>
-              ))}
+            <nav aria-label="Main navigation">
+              <ul className="flex items-center space-x-1">
+                {navItems.map((item) => (
+                  <li key={item.id}>
+                    <motion.button
+                      onClick={() => setActiveSection(item.id)}
+                      whileHover={{ scale: 1.02, y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`relative px-3 py-[10px] text-sm font-medium transition-all duration-300 flex items-center space-x-1 rounded-lg mx-0 ${
+                        activeSection === item.id
+                          ? "text-white"
+                          : "text-gray-300 hover:text-white hover:bg-white/5"
+                      }`}
+                      aria-current={activeSection === item.id ? "page" : undefined}
+                    >
+                      {item.icon}
+                      <span className="font-medium">{item.label}</span>
+                      {activeSection === item.id && (
+                        <motion.div
+                          layoutId="activeSection"
+                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 shadow-[0_0_6px_rgba(139,92,246,0.6)]"
+                          transition={{
+                            type: "spring",
+                            bounce: 0.2,
+                            duration: 0.6,
+                          }}
+                        />
+                      )}
+                    </motion.button>
+                  </li>
+                ))}
+              </ul>
             </nav>
           </div>
         </div>
