@@ -1,3 +1,5 @@
+import React from 'react';
+
 const TypingName = () => {
   const [displayText, setDisplayText] = React.useState('');
   const [currentIndex, setCurrentIndex] = React.useState(0);
@@ -23,3 +25,5 @@ const TypingName = () => {
     </span>
   );
 };
+
+export default TypingName;

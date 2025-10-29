@@ -1,12 +1,17 @@
-// @ts-nocheck
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, Star, GitFork, Calendar, MapPin, Clock, Users, Folder, ExternalLink } from "lucide-react";
+import { motion, useScroll } from "framer-motion";
+import { ArrowDown, Star, MapPin, Clock, Users, Folder, ExternalLink } from "lucide-react";
 
 // Typing Animation Component
-const TypingAnimation = ({ text, delay = 150, onComplete }) => {
+interface TypingAnimationProps {
+  text: string;
+  delay?: number;
+  onComplete?: () => void;
+}
+
+const TypingAnimation = ({ text, delay = 150, onComplete }: TypingAnimationProps) => {
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
@@ -45,8 +50,6 @@ export default function Overview() {
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -61,14 +64,16 @@ export default function Overview() {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-  const [wavePoints, setWavePoints] = useState([]);
+  interface WavePoint {
+    key: number;
+    posX: number;
+    posY: number;
+  }
+
+  const [wavePoints, setWavePoints] = useState<WavePoint[]>([]);
   const [lastMouseMove, setLastMouseMove] = useState(0);
 
-  const triggerWave = (event) => {
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const posX = event.clientX - bounds.left;
-    const posY = event.clientY - bounds.top;
-
+  const createWave = (posX: number, posY: number) => {
     const wave = { key: Date.now(), posX, posY };
     setWavePoints((prev) => [...prev, wave]);
 
@@ -78,7 +83,24 @@ export default function Overview() {
     }, 1000);
   };
 
-  const handleMouseMove = (event) => {
+  const triggerWave = (event: React.MouseEvent<HTMLDivElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const posX = event.clientX - bounds.left;
+    const posY = event.clientY - bounds.top;
+    createWave(posX, posY);
+  };
+
+  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const touch = event.touches[0];
+    if (touch) {
+      const posX = touch.clientX - bounds.left;
+      const posY = touch.clientY - bounds.top;
+      createWave(posX, posY);
+    }
+  };
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const now = Date.now();
     // Throttle mouse move events to every 100ms to avoid too many ripples
     if (now - lastMouseMove > 100) {
@@ -107,14 +129,14 @@ export default function Overview() {
     {
       title: "STEM Education Platform",
       description: "A comprehensive educational platform that makes STEM education engaging and accessible through gamification",
-      tech: ["HTML5", "CSS3", "JavaScript","firebase","Phaser.js"],
+      tech: ["HTML5", "CSS3", "JavaScript", "firebase", "Phaser.js"],
       link: "https://github.com/anmol-roy/SIH2025",
       icon: "📚"
     },
     {
       title: "AI Resume Analyzer",
       description: "AI-powered resume analyzer providing instant feedback, ATS scores, and job-specific improvement tips for better applications.",
-      tech: ["React","TailwindCSS","Puter.js","Pdf.js"],
+      tech: ["React", "TailwindCSS", "Puter.js", "Pdf.js"],
       link: "https://github.com/anmol-roy/Resume-Analyzer",
       icon: "📋"
     }
@@ -266,7 +288,7 @@ export default function Overview() {
             <div
               onClick={triggerWave}
               onWheel={triggerWave}
-              onTouchMove={triggerWave}
+              onTouchMove={handleTouchMove}
               onMouseDown={triggerWave}
               onMouseMove={handleMouseMove}
               className="relative h-72 w-72 md:h-96 md:w-96 overflow-hidden rounded-md border border-gray-700 bg-[#131337d8] grayscale hover:grayscale-0 cursor-pointer"
@@ -374,7 +396,7 @@ export default function Overview() {
                   ))}
                 </div>
                 <a
-                target="_blank" rel="noopener noreferrer"
+                  target="_blank" rel="noopener noreferrer"
                   href={project.link}
                   className="text-blue-400 text-sm hover:text-blue-300 transition-colors inline-flex items-center gap-1"
                 >

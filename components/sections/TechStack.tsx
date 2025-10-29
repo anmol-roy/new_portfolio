@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Star, GitFork, Calendar, Users, Folder, ExternalLink } from 'lucide-react';
+import { Star, Calendar, Users, Folder, ExternalLink } from 'lucide-react';
 
 interface TechCategory {
   id: string;
@@ -298,7 +298,6 @@ const SkillLevelBar = ({ level }: { level: number }) => {
 };
 
 const TechCard = ({ tech }: { tech: TechItem }) => {
-  const category = techCategories.find(c => c.id === tech.category);
   
   return (
     <motion.div
