@@ -17,7 +17,7 @@ const TypingAnimation = ({ text, delay = 150, onComplete }) => {
         setDisplayText(prev => prev + text[currentIndex]);
         setCurrentIndex(prev => prev + 1);
       }, delay);
-      
+
       return () => clearTimeout(timer);
     } else if (!isComplete) {
       setIsComplete(true);
@@ -61,6 +61,31 @@ export default function Overview() {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
+  const [wavePoints, setWavePoints] = useState([]);
+  const [lastMouseMove, setLastMouseMove] = useState(0);
+
+  const triggerWave = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const posX = event.clientX - bounds.left;
+    const posY = event.clientY - bounds.top;
+
+    const wave = { key: Date.now(), posX, posY };
+    setWavePoints((prev) => [...prev, wave]);
+
+    // remove the wave after animation ends
+    setTimeout(() => {
+      setWavePoints((prev) => prev.filter((w) => w.key !== wave.key));
+    }, 1000);
+  };
+
+  const handleMouseMove = (event) => {
+    const now = Date.now();
+    // Throttle mouse move events to every 100ms to avoid too many ripples
+    if (now - lastMouseMove > 100) {
+      setLastMouseMove(now);
+      triggerWave(event);
+    }
+  };
 
   // GitHub-style data
   const quickStats = [
@@ -73,32 +98,33 @@ export default function Overview() {
 
   const pinnedProjects = [
     {
-      title: "Heart Rate Detector",
-      description: "PPG-based React Native app for heart rate analysis",
-      tech: ["React Native", "TensorFlow", "Expo"],
-      link: "#projects",
-      icon: "❤️"
-    },
-    {
-      title: "Blood Pressure Estimator", 
-      description: "ML model for non-invasive BP estimation from facial videos",
-      tech: ["Python", "OpenCV", "TensorFlow"],
-      link: "#projects",
+      title: "Blood Pressure Estimation App",
+      description: "AI-powered mobile app for non-invasive blood pressure estimation using PPG signals.",
+      tech: ["Flutter", "TensorFlow", "Dart"],
+      link: "https://github.com/anmol-roy/SBP_DBP-prediction-model-with-flutter-application",
       icon: "🩺"
     },
     {
-      title: "Voice Assistant",
-      description: "AI-powered assistant using transformer models",
-      tech: ["Python", "Transformers", "FastAPI"],
-      link: "#projects",
-      icon: "🎤"
+      title: "STEM Education Platform",
+      description: "A comprehensive educational platform that makes STEM education engaging and accessible through gamification",
+      tech: ["HTML5", "CSS3", "JavaScript","firebase","Phaser.js"],
+      link: "https://github.com/anmol-roy/SIH2025",
+      icon: "📚"
+    },
+    {
+      title: "AI Resume Analyzer",
+      description: "AI-powered resume analyzer providing instant feedback, ATS scores, and job-specific improvement tips for better applications.",
+      tech: ["React","TailwindCSS","Puter.js","Pdf.js"],
+      link: "https://github.com/anmol-roy/Resume-Analyzer",
+      icon: "📋"
     }
   ];
 
   const currentFocus = [
-    "Building a hybrid CNN-BiLSTM model for Blood Pressure Estimation",
-    "Exploring Generative AI (LLMs & Transformers)",
-    "Improving UI/UX in my React Native apps"
+    "Learning backend development with Node.js and Express.js",
+    "Exploring advanced AI/ML techniques and frameworks",
+    "Building more full-stack web applications",
+    "Contributing to open-source projects"
   ];
 
   const techStack = [
@@ -130,7 +156,7 @@ export default function Overview() {
   ];
 
   const achievements = [
-    { icon: "🏆", title: "Built & published 3 AI-based apps", year: "2025" },
+    { icon: "🏆", title: "Built & published 3 apps", year: "2025" },
     { icon: "🌐", title: "Completed 45-Day Vocational AI/ML Training", year: "2025" },
     { icon: "🎓", title: "Presented ML Project at IIIT", year: "2024" }
   ];
@@ -138,21 +164,38 @@ export default function Overview() {
   // Show typing animation until both mounted AND typing is complete
   if (!mounted || !typingComplete) {
     return (
-      <section ref={heroRef} className="relative flex min-h-screen flex-col items-center justify-center px-4 py-20">
-        <div className="container mx-auto flex max-w-5xl flex-col items-center justify-center gap-8 md:flex-row md:gap-16">
-          <div className="flex flex-col items-center text-center md:items-start md:text-left">
-            <h1 className="mb-4 text-4xl font-bold md:text-5xl lg:text-6xl text-white">
+      <section ref={heroRef} className="relative flex min-h-screen flex-2 items-center justify-center px-10 py-20">
+        <div className="container mx-auto flex max-w-4xl flex-col items-baseline justify-center gap-4 md:flex-row md:gap-16">
+          <div className="flex flex-col items-baseline text-center md:items-start md:text-left">
+            <h1 className="mb-0 text-4xl font-bold md:text-5xl lg:text-6xl text-white">
               <span className="block">Hi, I&apos;m</span>
               <span className="bg-gradient-to-r from-[#60a5fa] via-[#a78bfa] to-[#60a5fa] bg-[length:200%_auto] animate-gradient text-transparent bg-clip-text">
-                <TypingAnimation 
-                  text="Anmol Roy" 
-                  delay={150} 
+                <TypingAnimation
+                  text="Anmol Roy"
+                  delay={150}
                   onComplete={handleTypingComplete}
                 />
               </span>
             </h1>
             <p className="text-xl text-gray-300 mt-4">
-              AI & ML Developer
+
+            </p>
+          </div>
+        </div>
+        <div className="container mx-auto flex max-w-4xl flex-col items-center justify-center gap-8 md:flex-row md:gap-16">
+          <div className="flex flex-col items-baseline text-center md:items-start md:text-left">
+            <h1 className="mb-4 text-4xl font-bold md:text-5xl lg:text-6xl text-white">
+              {/* <span className="block">Hi, I&apos;m</span> */}
+              <span className="bg-gradient-to-r from-[#60a5fa] via-[#a78bfa] to-[#60a5fa] bg-[length:200%_auto] animate-gradient text-transparent bg-clip-text">
+                {/* <TypingAnimation 
+                  text="" 
+                  delay={1000} 
+                  onComplete={handleTypingComplete}
+                /> */}
+              </span>
+            </h1>
+            <p className="text-xl text-gray-300 mt-4">
+
             </p>
           </div>
         </div>
@@ -165,9 +208,9 @@ export default function Overview() {
       {/* Hero Section */}
       <motion.section
         ref={heroRef}
-        className="relative flex min-h-screen flex-col items-center justify-center px-6 py-20"
+        className="relative flex  h-[540px] flex-col  border-amber-400 items-center justify-center px-0 py-20"
       >
-        <div className="container mx-auto flex max-w-5xl flex-col items-center justify-center gap-12 md:flex-row md:gap-16">
+        <div className="container mx-5 flex max-w-5xl  border-amber-400 flex-col items-center justify-center gap-12 md:flex-row md:gap-16">
           <motion.div
             className="flex flex-col items-center text-center md:items-start md:text-left"
             initial={{ opacity: 0, y: 20 }}
@@ -197,7 +240,7 @@ export default function Overview() {
               AI & ML Developer passionate about creating intelligent mobile and web experiences.
             </motion.p>
 
-            <motion.div 
+            <motion.div
               className="flex gap-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -214,20 +257,45 @@ export default function Overview() {
             </motion.div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="relative"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="relative h-72 w-72 md:h-96 md:w-96 overflow-hidden rounded-md border border-gray-700 bg-[#131337d8]">
+            <div
+              onClick={triggerWave}
+              onWheel={triggerWave}
+              onTouchMove={triggerWave}
+              onMouseDown={triggerWave}
+              onMouseMove={handleMouseMove}
+              className="relative h-72 w-72 md:h-96 md:w-96 overflow-hidden rounded-md border border-gray-700 bg-[#131337d8] grayscale hover:grayscale-0 cursor-pointer"
+            >
               <Image
-                src="/profile.jpg?height=384&width=384"
+                src="/images/githubdp.jpg"
                 alt="Anmol Roy"
                 fill
-                className="object-cover"
+                className="object-cover transition duration-300"
                 priority
               />
+
+              {/* Ripple Layer */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                {wavePoints.map((wave) => (
+                  <motion.span
+                    key={wave.key}
+                    initial={{ scale: 0, opacity: 0.6 }}
+                    animate={{ scale: 8, opacity: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    style={{
+                      top: wave.posY,
+                      left: wave.posX,
+                      transform: "translate(-50%, -50%)",
+                    }}
+                    className="absolute w-4 h-4 rounded-full bg-white/40 pointer-events-none"
+                  />
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
@@ -305,7 +373,8 @@ export default function Overview() {
                     </span>
                   ))}
                 </div>
-                <a 
+                <a
+                target="_blank" rel="noopener noreferrer"
                   href={project.link}
                   className="text-blue-400 text-sm hover:text-blue-300 transition-colors inline-flex items-center gap-1"
                 >
@@ -328,7 +397,7 @@ export default function Overview() {
           <div className="border border-gray-700 rounded-md p-6 bg-[#131337d8]">
             <ul className="text-gray-300 space-y-3">
               {currentFocus.map((focus, index) => (
-                <motion.li 
+                <motion.li
                   key={index}
                   className="flex items-start gap-3"
                   initial={{ opacity: 0, x: -20 }}
@@ -382,7 +451,7 @@ export default function Overview() {
           <div className="border border-gray-700 rounded-md p-6 bg-[#131337d8]">
             <div className="space-y-4">
               {activities.map((activity, index) => (
-                <motion.div 
+                <motion.div
                   key={index}
                   className="flex items-start gap-4 py-2"
                   initial={{ opacity: 0, x: -20 }}

@@ -77,7 +77,7 @@ const techStack: TechItem[] = [
     name: 'React',
     category: 'frontend',
     level: 5,
-    experience: '3+ years',
+    experience: '1+ years',
     description: 'Building dynamic and interactive user interfaces',
     icon: '⚛️',
     color: 'bg-blue-500/20 border-blue-500/30',
@@ -89,7 +89,7 @@ const techStack: TechItem[] = [
     name: 'Next.js',
     category: 'frontend',
     level: 5,
-    experience: '2+ years',
+    experience: '6+ months',
     description: 'Full-stack React framework for production',
     icon: '▲',
     color: 'bg-gray-500/20 border-gray-500/30',
@@ -101,7 +101,7 @@ const techStack: TechItem[] = [
     name: 'TypeScript',
     category: 'frontend',
     level: 4,
-    experience: '2+ years',
+    experience: '6+ months',
     description: 'Type-safe JavaScript development',
     icon: '📘',
     color: 'bg-blue-600/20 border-blue-600/30',
@@ -112,24 +112,14 @@ const techStack: TechItem[] = [
     name: 'Tailwind CSS',
     category: 'frontend',
     level: 5,
-    experience: '2+ years',
+    experience: '1.5+ years',
     description: 'Utility-first CSS framework',
     icon: '💨',
     color: 'bg-cyan-500/20 border-cyan-500/30',
     projects: 15,
     isFavorite: true
   },
-  {
-    id: 'vue',
-    name: 'Vue.js',
-    category: 'frontend',
-    level: 3,
-    experience: '1 year',
-    description: 'Progressive JavaScript framework',
-    icon: '🟢',
-    color: 'bg-green-500/20 border-green-500/30',
-    projects: 3
-  },
+  
 
   // Backend
   {
@@ -137,29 +127,33 @@ const techStack: TechItem[] = [
     name: 'Node.js',
     category: 'backend',
     level: 4,
-    experience: '3+ years',
+    experience: '2+ months',
     description: 'JavaScript runtime for server-side development',
     icon: '🟢',
     color: 'bg-green-600/20 border-green-600/30',
-    projects: 9
+    projects: 9,
+        isLearning: true
+
   },
   {
     id: 'express',
     name: 'Express.js',
     category: 'backend',
     level: 4,
-    experience: '3+ years',
+    experience: '2+ months',
     description: 'Minimal web framework for Node.js',
     icon: '🚂',
     color: 'bg-gray-600/20 border-gray-600/30',
-    projects: 7
+    projects: 7,
+        isLearning: true
+
   },
   {
     id: 'python',
     name: 'Python',
     category: 'backend',
     level: 4,
-    experience: '2+ years',
+    experience: '6+ months',
     description: 'Versatile programming language',
     icon: '🐍',
     color: 'bg-yellow-500/20 border-yellow-500/30',
@@ -170,7 +164,7 @@ const techStack: TechItem[] = [
     name: 'FastAPI',
     category: 'backend',
     level: 3,
-    experience: '1 year',
+    experience: '6+ months',
     description: 'Modern Python web framework',
     icon: '⚡',
     color: 'bg-green-500/20 border-green-500/30',
@@ -184,23 +178,23 @@ const techStack: TechItem[] = [
     name: 'MongoDB',
     category: 'database',
     level: 4,
-    experience: '2+ years',
+    experience: '1+ years',
     description: 'NoSQL document database',
     icon: '🍃',
     color: 'bg-green-500/20 border-green-500/30',
     projects: 8
   },
-  {
-    id: 'postgresql',
-    name: 'PostgreSQL',
-    category: 'database',
-    level: 3,
-    experience: '1 year',
-    description: 'Powerful open-source relational database',
-    icon: '🐘',
-    color: 'bg-blue-700/20 border-blue-700/30',
-    projects: 4
-  },
+  // {
+  //   id: 'postgresql',
+  //   name: 'PostgreSQL',
+  //   category: 'database',
+  //   level: 3,
+  //   experience: '1 year',
+  //   description: 'Powerful open-source relational database',
+  //   icon: '🐘',
+  //   color: 'bg-blue-700/20 border-blue-700/30',
+  //   projects: 4
+  // },
   {
     id: 'redis',
     name: 'Redis',
@@ -230,7 +224,7 @@ const techStack: TechItem[] = [
     name: 'Git',
     category: 'tools',
     level: 5,
-    experience: '3+ years',
+    experience: '6+ months',
     description: 'Version control system',
     icon: '📚',
     color: 'bg-orange-500/20 border-orange-500/30',
@@ -253,7 +247,7 @@ const techStack: TechItem[] = [
     name: 'Vercel',
     category: 'tools',
     level: 4,
-    experience: '2+ years',
+    experience: '1+ years',
     description: 'Cloud platform for static sites',
     icon: '▲',
     color: 'bg-black/20 border-black/30',
@@ -573,17 +567,25 @@ export default function TechStack() {
           <div className="text-center">
             <h2 className="text-2xl font-semibold text-white mb-4">Continuous Learning Journey</h2>
             <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed mb-6">
-              Technology evolves rapidly, and so do I. Currently exploring new frontiers in 
-              cloud architecture, AI/ML integration, and performance optimization to build 
+              Technology evolves rapidly, and so do I. Currently exploring new technologies 
+              
+              , AI/ML integration, and performance optimization to build 
               the next generation of web applications.
             </p>
+            <a 
+            href="https://github.com/anmol-roy/"
+              target="_blank" rel="noopener noreferrer"
+            >
             <motion.div
               whileHover={{ scale: 1.05, y: -1 }}
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg text-white font-semibold cursor-pointer"
             >
+
+
               <span>View Learning Roadmap</span>
               <ExternalLink className="w-4 h-4" />
             </motion.div>
+              </a>
           </div>
         </motion.section>
       </div>

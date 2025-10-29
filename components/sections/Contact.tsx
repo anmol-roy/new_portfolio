@@ -36,21 +36,21 @@ const ContactPage = () => {
     {
       icon: Mail,
       label: 'Email',
-      value: 'hello@anmolroy.com',
-      href: 'mailto:hello@anmolroy.com',
+      value: 'royanmol112@flash.co',
+      href: 'mailto:royanmol112@flash.co',
       color: 'hover:bg-red-500/20'
     },
     {
       icon: MapPin,
       label: 'Location',
-      value: 'India',
+      value: 'Raipur , India',
       color: 'hover:bg-green-500/20'
     },
     {
       icon: Phone,
       label: 'Phone',
-      value: '+91 9876543210',
-      href: 'tel:+919876543210',
+      value: '+91 915858****',
+      href: 'tel:+91915858****',
       color: 'hover:bg-blue-500/20'
     }
   ];
@@ -72,7 +72,7 @@ const ContactPage = () => {
     },
     {
       name: 'Email',
-      url: 'mailto:hello@anmolroy.com',
+      url: 'royanmol@flash.co',
       icon: Mail,
       color: 'hover:bg-red-500/20',
       description: 'Send me a message'
