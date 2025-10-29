@@ -1,6 +1,7 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 // Define the props interface
 interface ModernHeaderProps {
@@ -231,13 +232,13 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
               <div className="relative">
                 <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-sm"></div>
                 <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#0a0339] border border-white/20">
-                  <a href="/" className="flex items-center justify-center">
+                  <Link href="/" className="flex items-center justify-center">
                     <img
                       src="https://anuragsinghbam.com/images/name-logo-white.svg"
                       alt="Logo"
                       className="w-8 h-8 brightness-110 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
                     />
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="flex flex-col">
