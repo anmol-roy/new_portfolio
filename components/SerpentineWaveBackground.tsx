@@ -3,15 +3,10 @@ import { motion } from "framer-motion";
 import { useEffect, useState, useMemo } from "react";
 
 export default function SerpentineWaveWithStars() {
-  const [phaseShift, setPhaseShift] = useState<number>(0);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
 
   useEffect(() => {
     setIsHydrated(true);
-    const interval = setInterval(() => {
-      setPhaseShift((prev) => prev + 0.05);
-    }, 50);
-    return () => clearInterval(interval);
   }, []);
 
   // Generate static paths with consistent precision

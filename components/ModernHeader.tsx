@@ -601,9 +601,11 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
                 <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-sm"></div>
                 <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-[#0a0339] border border-white/20">
                   <Link href="/" className="flex items-center justify-center">
-                    <img
+                    <Image
                       src="https://anuragsinghbam.com/images/name-logo-white.svg"
                       alt="Logo"
+                      width={24}
+                      height={24}
                       className="w-6 h-6 brightness-110 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
                     />
                   </Link>

@@ -10,8 +10,6 @@ import {
   ArrowUpRight, 
   ExternalLink, 
   Calendar, 
-  MapPin, 
-  Clock, 
   Users, 
   Folder, 
   Star,
