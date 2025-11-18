@@ -12,6 +12,7 @@ interface ModernHeaderProps {
 export default function ModernHeader({ activeSection, setActiveSection }: ModernHeaderProps) {
   const [isConnectOpen, setIsConnectOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
 
   // Handle scroll to hide/show header
@@ -43,13 +44,13 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isConnectOpen, isMoreOpen]);
 
-  // Prevent background scroll when dropdown is open
+  // Prevent background scroll when mobile menu is open
   useEffect(() => {
-    document.body.style.overflow = isConnectOpen || isMoreOpen ? "hidden" : "auto";
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [isConnectOpen, isMoreOpen]);
+  }, [isMobileMenuOpen]);
 
   const navItems = [
     {
@@ -289,254 +290,533 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
     setIsMoreOpen((prev) => !prev);
   }, []);
 
+  const toggleMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen((prev) => !prev);
+  }, []);
+
   const handleMoreItemClick = useCallback(() => {
     setIsMoreOpen(false);
   }, []);
 
+  const handleMobileNavClick = useCallback((section: string) => {
+    setActiveSection(section);
+    setIsMobileMenuOpen(false);
+  }, [setActiveSection]);
+
   return (
-    <motion.header
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: hidden ? -100 : 0, opacity: 1 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-gradient-to-b from-[#0a0339]/95 to-[#0a0339]/70 border-b border-white/20"
-    >
-      {/* Top Row: Logo, Name, and Buttons */}
-      <div>
-        <div className="flex justify-between mx-5 my-3">
-          <div>
-            <div className="flex items-center space-x-4">
+    <>
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: hidden ? -100 : 0, opacity: 1 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-gradient-to-b from-[#0a0339]/95 to-[#0a0339]/70 border-b border-white/20"
+      >
+        {/* Desktop & Tablet Layout */}
+        <div className="hidden md:block">
+          <div className="flex justify-between mx-3 lg:mx-5 my-3">
+            <div>
+              <div className="flex items-center space-x-2 lg:space-x-4">
+                <div className="relative">
+                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-sm"></div>
+                  <div className="relative flex h-8 w-8 lg:h-10 lg:w-10 items-center justify-center rounded-full bg-[#0a0339] border border-white/20">
+                    <Link href="/" className="flex items-center justify-center">
+                      <img
+                        src="https://anuragsinghbam.com/images/name-logo-white.svg"
+                        alt="Logo"
+                        className="w-6 h-6 lg:w-8 lg:h-8 brightness-110 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
+                      />
+                    </Link>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-white font-bold text-base lg:text-lg tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                    Anmol Roy
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div className="flex items-center space-x-2 lg:space-x-3">
+                {/* Resume Download Button */}
+                <motion.button
+                  onClick={handleResumeDownload}
+                  whileHover={{ scale: 1.05, y: -1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-2 py-1.5 lg:px-3 lg:py-2 text-xs lg:text-sm font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center space-x-1 lg:space-x-2 shadow-lg hover:shadow-blue-500/10"
+                >
+                  <span>Resume</span>
+                  <svg
+                    className="w-3 h-3 lg:w-4 lg:h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </motion.button>
+
+                {/* Connect Button with Dropdown */}
+                <div className="relative connect-dropdown">
+                  <motion.button
+                    onClick={toggleConnectMenu}
+                    aria-haspopup="menu"
+                    aria-expanded={isConnectOpen}
+                    aria-controls="connect-menu"
+                    whileHover={{ scale: 1.05, y: -1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-2 py-1.5 lg:px-3 lg:py-2 text-xs lg:text-sm font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center space-x-1 lg:space-x-2 shadow-lg hover:shadow-blue-500/10"
+                  >
+                    <span>Connect</span>
+                    <motion.div
+                      animate={{ rotate: isConnectOpen ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <svg
+                        className="w-3 h-3 lg:w-4 lg:h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </motion.div>
+                  </motion.button>
+
+                  {/* Dropdown Menu */}
+                  <AnimatePresence>
+                    {isConnectOpen && (
+                      <motion.div
+                        id="connect-menu"
+                        role="menu"
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute right-0 top-full mt-2 w-48 lg:w-56 bg-[#1a0b3c] border border-white/20 rounded-lg shadow-2xl shadow-blue-500/20 backdrop-blur-xl z-50"
+                        onMouseLeave={() => setIsConnectOpen(false)}
+                      >
+                        <div className="p-2 lg:p-3">
+                          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
+                            Connect with me
+                          </div>
+                          {socialLinks.map((social, index) => (
+                            <motion.a
+                              key={social.name}
+                              href={social.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                              whileHover={{ scale: 1.02, x: 5 }}
+                              className={`flex items-center space-x-3 w-full px-2 py-2 lg:px-3 lg:py-3 text-xs lg:text-sm text-white rounded-lg transition-all duration-200 ${social.color} hover:bg-opacity-20 border border-transparent hover:border-white/10`}
+                              role="menuitem"
+                            >
+                              <div className="flex items-center justify-center w-4 h-4 lg:w-5 lg:h-5">
+                                {social.icon}
+                              </div>
+                              <span className="font-medium">{social.name}</span>
+                            </motion.a>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* More Dropdown */}
+                <div className="relative more-dropdown">
+                  <motion.button
+                    onClick={toggleMoreMenu}
+                    aria-haspopup="menu"
+                    aria-expanded={isMoreOpen}
+                    whileHover={{ scale: 1.05, y: -1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-2 py-1.5 lg:px-3 lg:py-2 text-xs lg:text-sm font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center space-x-1 lg:space-x-2 shadow-lg hover:shadow-blue-500/10"
+                  >
+                    <span>More</span>
+                    <motion.div
+                      animate={{ rotate: isMoreOpen ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <svg
+                        className="w-3 h-3 lg:w-4 lg:h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </motion.div>
+                  </motion.button>
+
+                  {/* More Dropdown Menu */}
+                  <AnimatePresence>
+                    {isMoreOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute right-0 top-full mt-2 w-44 lg:w-48 bg-[#1a0b3c] border border-white/20 rounded-lg shadow-2xl shadow-blue-500/20 backdrop-blur-xl z-50"
+                        onMouseLeave={() => setIsMoreOpen(false)}
+                      >
+                        <div className="p-2 lg:p-3">
+                          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
+                            More Pages
+                          </div>
+                          {moreItems.map((item, index) => (
+                            <Link key={item.id} href={item.href}>
+                              <motion.div
+                                onClick={handleMoreItemClick}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                                whileHover={{ scale: 1.02, x: 5 }}
+                                className={`flex items-center space-x-3 w-full px-2 py-2 lg:px-3 lg:py-3 text-xs lg:text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/10 cursor-pointer ${
+                                  activeSection === item.id
+                                    ? "text-white bg-white/10"
+                                    : "text-white hover:bg-white/5"
+                                }`}
+                              >
+                                <div className="flex items-center justify-center w-4 h-4 lg:w-5 lg:h-5">
+                                  {item.icon}
+                                </div>
+                                <span className="font-medium">{item.label}</span>
+                              </motion.div>
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Navigation - Hide on small tablets */}
+          <div className="hidden lg:block">
+            <div className="flex items-center justify-items-start mx-3 h-10">
+              <nav aria-label="Main navigation">
+                <ul className="flex items-center space-x-1">
+                  {navItems.map((item) => (
+                    <li key={item.id}>
+                      <motion.button
+                        onClick={() => setActiveSection(item.id)}
+                        whileHover={{ scale: 1.02, y: -1 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`relative px-2 lg:px-3 py-[10px] text-xs lg:text-sm font-medium transition-all duration-300 flex items-center space-x-1 rounded-lg mx-0 ${
+                          activeSection === item.id
+                            ? "text-white"
+                            : "text-gray-300 hover:text-white hover:bg-white/5"
+                        }`}
+                        aria-current={activeSection === item.id ? "page" : undefined}
+                      >
+                        {item.icon}
+                        <span className="font-medium">{item.label}</span>
+                        {activeSection === item.id && (
+                          <motion.div
+                            layoutId="activeSection"
+                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 shadow-[0_0_6px_rgba(139,92,246,0.6)]"
+                            transition={{
+                              type: "spring",
+                              bounce: 0.2,
+                              duration: 0.6,
+                            }}
+                          />
+                        )}
+                      </motion.button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+          {/* Tablet Navigation - Show on tablets, hide on mobile and desktop */}
+          <div className="lg:hidden">
+            <div className="flex items-center justify-start mx-3 overflow-x-auto scrollbar-hide">
+              <nav aria-label="Main navigation" className="w-full">
+                <ul className="flex items-center space-x-1 py-2">
+                  {navItems.map((item) => (
+                    <li key={item.id} className="flex-shrink-0">
+                      <motion.button
+                        onClick={() => setActiveSection(item.id)}
+                        whileHover={{ scale: 1.02, y: -1 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`relative px-2 py-2 text-xs font-medium transition-all duration-300 flex items-center space-x-1 rounded-lg ${
+                          activeSection === item.id
+                            ? "text-white"
+                            : "text-gray-300 hover:text-white hover:bg-white/5"
+                        }`}
+                        aria-current={activeSection === item.id ? "page" : undefined}
+                      >
+                        {item.icon}
+                        <span className="font-medium whitespace-nowrap">{item.label}</span>
+                        {activeSection === item.id && (
+                          <motion.div
+                            layoutId="activeSectionTablet"
+                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 shadow-[0_0_6px_rgba(139,92,246,0.6)]"
+                            transition={{
+                              type: "spring",
+                              bounce: 0.2,
+                              duration: 0.6,
+                            }}
+                          />
+                        )}
+                      </motion.button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Layout */}
+        <div className="md:hidden">
+          <div className="flex justify-between items-center mx-3 my-3">
+            {/* Logo and Name */}
+            <div className="flex items-center space-x-2">
               <div className="relative">
                 <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-sm"></div>
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#0a0339] border border-white/20">
+                <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-[#0a0339] border border-white/20">
                   <Link href="/" className="flex items-center justify-center">
                     <img
                       src="https://anuragsinghbam.com/images/name-logo-white.svg"
                       alt="Logo"
-                      className="w-8 h-8 brightness-110 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
+                      className="w-6 h-6 brightness-110 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
                     />
                   </Link>
                 </div>
               </div>
               <div className="flex flex-col">
-                <span className="text-white font-bold text-lg tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white font-bold text-sm tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                   Anmol Roy
                 </span>
               </div>
             </div>
-          </div>
-          <div>
-            <div className="flex items-center space-x-3">
-              {/* Resume Download Button */}
-              <motion.button
-                onClick={handleResumeDownload}
-                whileHover={{ scale: 1.05, y: -1 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-3 py-2 text-sm font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-blue-500/10"
-              >
-                <span>Resume</span>
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-              </motion.button>
 
-              {/* Connect Button with Dropdown */}
-              <div className="relative connect-dropdown">
-                <motion.button
-                  onClick={toggleConnectMenu}
-                  aria-haspopup="menu"
-                  aria-expanded={isConnectOpen}
-                  aria-controls="connect-menu"
-                  whileHover={{ scale: 1.05, y: -1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-3 py-2 text-sm font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-blue-500/10"
-                >
-                  <span>Connect</span>
-                  <motion.div
-                    animate={{ rotate: isConnectOpen ? 180 : 0 }}
+            {/* Mobile Menu Button */}
+            <motion.button
+              onClick={toggleMobileMenu}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+              aria-label="Toggle mobile menu"
+            >
+              <AnimatePresence mode="wait">
+                {isMobileMenuOpen ? (
+                  <motion.svg
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </motion.div>
-                </motion.button>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </motion.svg>
+                ) : (
+                  <motion.svg
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </motion.svg>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          </div>
+        </div>
+      </motion.header>
 
-                {/* Dropdown Menu */}
-                <AnimatePresence>
-                  {isConnectOpen && (
-                    <motion.div
-                      id="connect-menu"
-                      role="menu"
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute right-0 top-full mt-2 w-56 bg-[#1a0b3c] border border-white/20 rounded-lg shadow-2xl shadow-blue-500/20 backdrop-blur-xl z-50"
-                      onMouseLeave={() => setIsConnectOpen(false)}
-                    >
-                      <div className="p-3">
-                        <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
-                          Connect with me
-                        </div>
-                        {socialLinks.map((social, index) => (
-                          <motion.a
-                            key={social.name}
-                            href={social.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                            whileHover={{ scale: 1.02, x: 5 }}
-                            className={`flex items-center space-x-3 w-full px-3 py-3 text-sm text-white rounded-lg transition-all duration-200 ${social.color} hover:bg-opacity-20 border border-transparent hover:border-white/10`}
-                            role="menuitem"
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+              onClick={toggleMobileMenu}
+            />
+
+            {/* Mobile Menu Panel */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-[65px] right-0 bottom-0 w-[85%] max-w-sm bg-gradient-to-b from-[#0a0339] to-[#1a0b3c] border-l border-white/20 z-50 md:hidden overflow-y-auto"
+            >
+              <div className="p-4 space-y-6">
+                {/* Navigation Items */}
+                <div>
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-2">
+                    Navigation
+                  </h3>
+                  <nav>
+                    <ul className="space-y-1">
+                      {navItems.map((item, index) => (
+                        <motion.li
+                          key={item.id}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                        >
+                          <button
+                            onClick={() => handleMobileNavClick(item.id)}
+                            className={`flex items-center space-x-3 w-full px-3 py-3 text-sm rounded-lg transition-all duration-200 ${
+                              activeSection === item.id
+                                ? "text-white bg-white/10 border border-white/20"
+                                : "text-gray-300 hover:text-white hover:bg-white/5"
+                            }`}
                           >
                             <div className="flex items-center justify-center w-5 h-5">
-                              {social.icon}
+                              {item.icon}
                             </div>
-                            <span className="font-medium">{social.name}</span>
-                          </motion.a>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+                            <span className="font-medium">{item.label}</span>
+                          </button>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </nav>
+                </div>
 
-              {/* More Dropdown */}
-              <div className="relative more-dropdown">
-                <motion.button
-                  onClick={toggleMoreMenu}
-                  aria-haspopup="menu"
-                  aria-expanded={isMoreOpen}
-                  whileHover={{ scale: 1.05, y: -1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-3 py-2 text-sm font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-blue-500/10"
-                >
-                  <span>More</span>
-                  <motion.div
-                    animate={{ rotate: isMoreOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </motion.div>
-                </motion.button>
+                {/* More Pages */}
+                <div>
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-2">
+                    More Pages
+                  </h3>
+                  <div className="space-y-1">
+                    {moreItems.map((item, index) => (
+                      <motion.div
+                        key={item.id}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: (navItems.length + index) * 0.05 }}
+                      >
+                        <Link href={item.href}>
+                          <div
+                            onClick={toggleMobileMenu}
+                            className="flex items-center space-x-3 w-full px-3 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200"
+                          >
+                            <div className="flex items-center justify-center w-5 h-5">
+                              {item.icon}
+                            </div>
+                            <span className="font-medium">{item.label}</span>
+                          </div>
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
 
-                {/* More Dropdown Menu */}
-                <AnimatePresence>
-                  {isMoreOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute right-0 top-full mt-2 w-48 bg-[#1a0b3c] border border-white/20 rounded-lg shadow-2xl shadow-blue-500/20 backdrop-blur-xl z-50"
-                      onMouseLeave={() => setIsMoreOpen(false)}
-                    >
-                      <div className="p-3">
-                        <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
-                          More Pages
+                {/* Social Links */}
+                <div>
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-2">
+                    Connect
+                  </h3>
+                  <div className="space-y-1">
+                    {socialLinks.map((social, index) => (
+                      <motion.a
+                        key={social.name}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: (navItems.length + moreItems.length + index) * 0.05 }}
+                        className={`flex items-center space-x-3 w-full px-3 py-3 text-sm text-gray-300 hover:text-white rounded-lg transition-all duration-200 ${social.color}`}
+                      >
+                        <div className="flex items-center justify-center w-5 h-5">
+                          {social.icon}
                         </div>
-                        {moreItems.map((item, index) => (
-                          <Link key={item.id} href={item.href}>
-                            <motion.div
-                              onClick={handleMoreItemClick}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: index * 0.1 }}
-                              whileHover={{ scale: 1.02, x: 5 }}
-                              className={`flex items-center space-x-3 w-full px-3 py-3 text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/10 cursor-pointer ${
-                                activeSection === item.id
-                                  ? "text-white bg-white/10"
-                                  : "text-white hover:bg-white/5"
-                              }`}
-                            >
-                              <div className="flex items-center justify-center w-5 h-5">
-                                {item.icon}
-                              </div>
-                              <span className="font-medium">{item.label}</span>
-                            </motion.div>
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-        </div>
+                        <span className="font-medium">{social.name}</span>
+                      </motion.a>
+                    ))}
+                  </div>
+                </div>
 
-        <div>
-          <div className="flex items-center justify-items-start mx-3 h-10">
-            <nav aria-label="Main navigation">
-              <ul className="flex items-center space-x-1">
-                {navItems.map((item) => (
-                  <li key={item.id}>
-                    <motion.button
-                      onClick={() => setActiveSection(item.id)}
-                      whileHover={{ scale: 1.02, y: -1 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`relative px-3 py-[10px] text-sm font-medium transition-all duration-300 flex items-center space-x-1 rounded-lg mx-0 ${
-                        activeSection === item.id
-                          ? "text-white"
-                          : "text-gray-300 hover:text-white hover:bg-white/5"
-                      }`}
-                      aria-current={activeSection === item.id ? "page" : undefined}
-                    >
-                      {item.icon}
-                      <span className="font-medium">{item.label}</span>
-                      {activeSection === item.id && (
-                        <motion.div
-                          layoutId="activeSection"
-                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 shadow-[0_0_6px_rgba(139,92,246,0.6)]"
-                          transition={{
-                            type: "spring",
-                            bounce: 0.2,
-                            duration: 0.6,
-                          }}
-                        />
-                      )}
-                    </motion.button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </div>
-    </motion.header>
+                {/* Resume Button */}
+                <motion.button
+                  onClick={handleResumeDownload}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: (navItems.length + moreItems.length + socialLinks.length) * 0.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full px-4 py-3 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg"
+                >
+                  <span>Download Resume</span>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </motion.button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Add custom scrollbar styles */}
+      <style jsx global>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+    </>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import { motion, useScroll } from "framer-motion";
 import { ArrowDown, Star, MapPin, Clock, Users, Folder, ExternalLink } from "lucide-react";
 
@@ -64,6 +63,7 @@ export default function Overview() {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
+
   interface WavePoint {
     key: number;
     posX: number;
@@ -72,12 +72,12 @@ export default function Overview() {
 
   const [wavePoints, setWavePoints] = useState<WavePoint[]>([]);
   const [lastMouseMove, setLastMouseMove] = useState(0);
+  const waveCounterRef = useRef(0);
 
   const createWave = (posX: number, posY: number) => {
-    const wave = { key: Date.now(), posX, posY };
+    const wave = { key: Date.now() + waveCounterRef.current++, posX, posY };
     setWavePoints((prev) => [...prev, wave]);
 
-    // remove the wave after animation ends
     setTimeout(() => {
       setWavePoints((prev) => prev.filter((w) => w.key !== wave.key));
     }, 1000);
@@ -102,14 +102,12 @@ export default function Overview() {
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const now = Date.now();
-    // Throttle mouse move events to every 100ms to avoid too many ripples
     if (now - lastMouseMove > 100) {
       setLastMouseMove(now);
       triggerWave(event);
     }
   };
 
-  // GitHub-style data
   const quickStats = [
     { icon: Users, label: "Followers", value: "120" },
     { icon: Folder, label: "Projects", value: "25" },
@@ -183,14 +181,13 @@ export default function Overview() {
     { icon: "🎓", title: "Presented ML Project at IIIT", year: "2024" }
   ];
 
-  // Show typing animation until both mounted AND typing is complete
   if (!mounted || !typingComplete) {
     return (
-      <section ref={heroRef} className="relative flex min-h-screen flex-2 items-center justify-center px-10 py-20">
-        <div className="container mx-auto flex max-w-4xl flex-col items-baseline justify-center gap-4 md:flex-row md:gap-16">
-          <div className="flex flex-col items-baseline text-center md:items-start md:text-left">
-            <h1 className="mb-0 text-4xl font-bold md:text-5xl lg:text-6xl text-white">
-              <span className="block">Hi, I&apos;m</span>
+      <section ref={heroRef} className="relative flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="container mx-auto flex max-w-4xl flex-col items-center justify-center">
+          <div className="flex flex-col items-center text-center w-full">
+            <h1 className="mb-0 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+              <span className="block">Hi, I'm</span>
               <span className="bg-gradient-to-r from-[#60a5fa] via-[#a78bfa] to-[#60a5fa] bg-[length:200%_auto] animate-gradient text-transparent bg-clip-text">
                 <TypingAnimation
                   text="Anmol Roy"
@@ -199,26 +196,6 @@ export default function Overview() {
                 />
               </span>
             </h1>
-            <p className="text-xl text-gray-300 mt-4">
-
-            </p>
-          </div>
-        </div>
-        <div className="container mx-auto flex max-w-4xl flex-col items-center justify-center gap-8 md:flex-row md:gap-16">
-          <div className="flex flex-col items-baseline text-center md:items-start md:text-left">
-            <h1 className="mb-4 text-4xl font-bold md:text-5xl lg:text-6xl text-white">
-              {/* <span className="block">Hi, I&apos;m</span> */}
-              <span className="bg-gradient-to-r from-[#60a5fa] via-[#a78bfa] to-[#60a5fa] bg-[length:200%_auto] animate-gradient text-transparent bg-clip-text">
-                {/* <TypingAnimation 
-                  text="" 
-                  delay={1000} 
-                  onComplete={handleTypingComplete}
-                /> */}
-              </span>
-            </h1>
-            <p className="text-xl text-gray-300 mt-4">
-
-            </p>
           </div>
         </div>
       </section>
@@ -226,23 +203,23 @@ export default function Overview() {
   }
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       {/* Hero Section */}
       <motion.section
         ref={heroRef}
-        className="relative flex  h-[540px] flex-col  border-amber-400 items-center justify-center px-0 py-20"
+        className="relative flex min-h-[500px] sm:min-h-[540px] lg:min-h-[600px] flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20"
       >
-        <div className="container mx-5 flex max-w-5xl  border-amber-400 flex-col items-center justify-center gap-12 md:flex-row md:gap-16">
+        <div className="container mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 sm:gap-10 lg:gap-12 md:flex-row">
           <motion.div
-            className="flex flex-col items-center text-center md:items-start md:text-left"
+            className="flex flex-col items-center text-center md:items-start md:text-left w-full md:w-1/2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             <motion.h1
-              className="mb-6 text-5xl font-bold md:text-6xl lg:text-7xl text-white"
+              className="mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight"
             >
-              <span className="block text-gray-300">Hi, I&apos;m</span>
+              <span className="block text-gray-300 mb-2">Hi, I'm</span>
               <motion.span
                 className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
                 animate={{ backgroundPosition: ["0% center", "100% center"] }}
@@ -254,7 +231,7 @@ export default function Overview() {
             </motion.h1>
 
             <motion.p
-              className="mb-8 max-w-lg text-xl text-gray-300"
+              className="mb-6 sm:mb-8 max-w-lg text-base sm:text-lg lg:text-xl text-gray-300 px-4 md:px-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -270,7 +247,7 @@ export default function Overview() {
             >
               <motion.button
                 onClick={() => scrollToSection("projects")}
-                className="px-8 py-4 text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+                className="px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -280,7 +257,7 @@ export default function Overview() {
           </motion.div>
 
           <motion.div
-            className="relative"
+            className="relative w-full md:w-1/2 flex justify-center"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -291,17 +268,14 @@ export default function Overview() {
               onTouchMove={handleTouchMove}
               onMouseDown={triggerWave}
               onMouseMove={handleMouseMove}
-              className="relative h-72 w-72 md:h-96 md:w-96 overflow-hidden rounded-md border border-gray-700 bg-[#131337d8] grayscale hover:grayscale-0 cursor-pointer"
+              className="relative h-56 w-56 sm:h-64 sm:w-64 md:h-72 md:w-72 lg:h-80 lg:w-80 xl:h-96 xl:w-96 overflow-hidden rounded-md border border-gray-700 bg-[#131337d8] grayscale hover:grayscale-0 cursor-pointer transition-all duration-300"
             >
-              <Image
+              <img
                 src="/images/githubdp.jpg"
                 alt="Anmol Roy"
-                fill
-                className="object-cover transition duration-300"
-                priority
+                className="w-full h-full object-cover"
               />
 
-              {/* Ripple Layer */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 {wavePoints.map((wave) => (
                   <motion.span
@@ -323,16 +297,16 @@ export default function Overview() {
         </div>
 
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
-          <ArrowDown className="h-8 w-8 text-gray-400" />
+          <ArrowDown className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
         </motion.div>
       </motion.section>
 
       {/* Content Sections */}
-      <div className="max-w-5xl mx-auto px-6 py-12 space-y-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 sm:space-y-12">
         {/* Quick Stats */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
@@ -340,20 +314,20 @@ export default function Overview() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl font-semibold text-white mb-6">Overview</h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 sm:mb-6">Overview</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
             {quickStats.map((stat, index) => (
               <motion.div
                 key={stat.label}
-                className="text-center p-4 rounded-md bg-[#131337d8] border border-gray-700"
+                className="text-center p-3 sm:p-4 rounded-md bg-[#131337d8] border border-gray-700"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <stat.icon className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-white">{stat.value}</div>
-                <div className="text-sm text-gray-400">{stat.label}</div>
+                <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 mx-auto mb-2" />
+                <div className="text-xl sm:text-2xl font-bold text-white">{stat.value}</div>
+                <div className="text-xs sm:text-sm text-gray-400">{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -367,25 +341,25 @@ export default function Overview() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl font-semibold text-white mb-6">Featured Projects</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 sm:mb-6">Featured Projects</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {pinnedProjects.map((project, index) => (
               <motion.div
                 key={project.title}
-                className="border border-gray-700 rounded-md p-4 bg-[#131337d8] hover:border-gray-500 transition-colors"
+                className="border border-gray-700 rounded-md p-4 sm:p-5 bg-[#131337d8] hover:border-gray-500 transition-colors"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-xl">{project.icon}</span>
-                  <h3 className="font-semibold text-white text-lg">
+                <div className="flex items-center gap-2 sm:gap-3 mb-3">
+                  <span className="text-lg sm:text-xl">{project.icon}</span>
+                  <h3 className="font-semibold text-white text-base sm:text-lg">
                     {project.title}
                   </h3>
                 </div>
-                <p className="text-gray-400 text-sm mb-3">{project.description}</p>
-                <div className="flex flex-wrap gap-1 mb-4">
+                <p className="text-gray-400 text-xs sm:text-sm mb-3 leading-relaxed">{project.description}</p>
+                <div className="flex flex-wrap gap-1 sm:gap-2 mb-4">
                   {project.tech.map((tech) => (
                     <span
                       key={tech}
@@ -398,10 +372,10 @@ export default function Overview() {
                 <a
                   target="_blank" rel="noopener noreferrer"
                   href={project.link}
-                  className="text-blue-400 text-sm hover:text-blue-300 transition-colors inline-flex items-center gap-1"
+                  className="text-blue-400 text-xs sm:text-sm hover:text-blue-300 transition-colors inline-flex items-center gap-1"
                 >
                   View Details
-                  <ExternalLink className="w-4 h-4" />
+                  <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                 </a>
               </motion.div>
             ))}
@@ -415,13 +389,13 @@ export default function Overview() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl font-semibold text-white mb-4">Current Focus</h2>
-          <div className="border border-gray-700 rounded-md p-6 bg-[#131337d8]">
-            <ul className="text-gray-300 space-y-3">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">Current Focus</h2>
+          <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
+            <ul className="text-gray-300 space-y-2 sm:space-y-3">
               {currentFocus.map((focus, index) => (
                 <motion.li
                   key={index}
-                  className="flex items-start gap-3"
+                  className="flex items-start gap-2 sm:gap-3 text-sm sm:text-base"
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -442,13 +416,13 @@ export default function Overview() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl font-semibold text-white mb-6">Skills</h2>
-          <div className="border border-gray-700 rounded-md p-6 bg-[#131337d8]">
-            <div className="flex flex-wrap gap-3">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 sm:mb-6">Skills</h2>
+          <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {techStack.map((tech, index) => (
                 <motion.div
                   key={tech.name}
-                  className="px-4 py-2 bg-[#21215ad8] rounded-md text-white border border-gray-600 flex items-center gap-2"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#21215ad8] rounded-md text-white border border-gray-600 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3, delay: index * 0.03 }}
@@ -469,22 +443,22 @@ export default function Overview() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl font-semibold text-white mb-4">Recent Activity</h2>
-          <div className="border border-gray-700 rounded-md p-6 bg-[#131337d8]">
-            <div className="space-y-4">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">Recent Activity</h2>
+          <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
+            <div className="space-y-3 sm:space-y-4">
               {activities.map((activity, index) => (
                 <motion.div
                   key={index}
-                  className="flex items-start gap-4 py-2"
+                  className="flex items-start gap-3 sm:gap-4 py-2"
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className="flex-shrink-0 w-3 h-3 bg-green-500 rounded-full mt-2"></div>
+                  <div className="flex-shrink-0 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-gray-300">{activity.description}</p>
-                    <p className="text-gray-500 text-sm">{activity.date}</p>
+                    <p className="text-gray-300 text-sm sm:text-base">{activity.description}</p>
+                    <p className="text-gray-500 text-xs sm:text-sm mt-1">{activity.date}</p>
                   </div>
                 </motion.div>
               ))}
@@ -499,23 +473,67 @@ export default function Overview() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl font-semibold text-white mb-4">Achievements</h2>
-          <div className="border border-gray-700 rounded-md p-6 bg-[#131337d8]">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">Achievements</h2>
+          <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {achievements.map((achievement, index) => (
                 <motion.div
                   key={achievement.title}
-                  className="text-center p-4 border border-gray-600 rounded-md bg-[#21215ad8]"
+                  className="text-center p-4 sm:p-5 border border-gray-600 rounded-md bg-[#21215ad8]"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className="text-3xl mb-2">{achievement.icon}</div>
-                  <h3 className="text-white font-medium mb-1">{achievement.title}</h3>
-                  <p className="text-gray-400 text-sm">{achievement.year}</p>
+                  <div className="text-2xl sm:text-3xl mb-2">{achievement.icon}</div>
+                  <h3 className="text-white font-medium mb-1 text-sm sm:text-base">{achievement.title}</h3>
+                  <p className="text-gray-400 text-xs sm:text-sm">{achievement.year}</p>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </motion.section>
+        {/* Get in Touch */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">Get in Touch</h2>
+          <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
+            <p className="text-gray-300 text-sm sm:text-base mb-4 sm:mb-6">
+              I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Feel free to reach out!
+            </p>
+            <div className="flex flex-wrap gap-3 sm:gap-4">
+              <motion.a
+                href="mailto:your.email@example.com"
+                className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Email Me
+              </motion.a>
+              <motion.a
+                href="https://github.com/anmol-roy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-medium text-white border border-gray-600 rounded-md hover:border-gray-500 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                GitHub
+              </motion.a>
+              <motion.a
+                href="https://linkedin.com/in/yourprofile"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-medium text-white border border-gray-600 rounded-md hover:border-gray-500 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                LinkedIn
+              </motion.a>
             </div>
           </div>
         </motion.section>

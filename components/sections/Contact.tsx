@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Mail, MapPin, Phone, Send, Github, Linkedin, ExternalLink } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ const ContactPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     
@@ -34,275 +34,192 @@ const ContactPage = () => {
 
   const contactInfo = [
     {
+      icon: Phone,
+      label: 'Phone',
+      values: ['+91 912 85#5 779', ],
+    },
+    {
       icon: Mail,
       label: 'Email',
-      value: 'royanmol112@flash.co',
-      href: 'mailto:royanmol112@flash.co',
-      color: 'hover:bg-red-500/20'
+      values: ['Support@uprankly.com'],
     },
     {
       icon: MapPin,
       label: 'Location',
-      value: 'Raipur , India',
-      color: 'hover:bg-green-500/20'
-    },
-    {
-      icon: Phone,
-      label: 'Phone',
-      value: '+91 915858****',
-      href: 'tel:+91915858****',
-      color: 'hover:bg-blue-500/20'
-    }
-  ];
-
-  const socialLinks = [
-    {
-      name: 'GitHub',
-      url: 'https://github.com/anmol-roy',
-      icon: Github,
-      color: 'hover:bg-gray-500/20',
-      description: 'Check out my projects'
-    },
-    {
-      name: 'LinkedIn',
-      url: 'https://linkedin.com/in/anmol-roy',
-      icon: Linkedin,
-      color: 'hover:bg-blue-600/20',
-      description: 'Connect professionally'
-    },
-    {
-      name: 'Email',
-      url: 'royanmol@flash.co',
-      icon: Mail,
-      color: 'hover:bg-red-500/20',
-      description: 'Send me a message'
+      values: ['New York, USA'],
     }
   ];
 
   return (
-    <div className="min-h-screen bg-[#00000000]">
-      <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
-        {/* Header Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
+    <div className="min-h-screen px-4 py-12 md:px-8 lg:px-16 xl:px-32">
+      {/* Header Section */}
+      <div className="text-center mb-16 max-w-4xl mx-auto">
+        <motion.h1 
+          initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center"
+          className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6"
         >
-          <h2 className="text-2xl font-semibold text-white mb-6">Get in Touch</h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed"
-          >
-            Let&apos;s create something amazing together. I&apos;m always open to discussing new projects, 
-            creative ideas, or opportunities to be part of your vision.
-          </motion.p>
-        </motion.section>
+          Get In Touch
+        </motion.h1>
+        <motion.p 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-gray-300 text-sm md:text-base"
+        >
+          We'll create high-quality linkable content and build at least 40 high-authority links to each asset, paving the way for you to grow your rankings, improve brand.
+        </motion.p>
+      </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Contact Information */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-6"
-          >
-            {/* Contact Info Cards */}
-            <div className="space-y-4">
+      <div className="grid lg:grid-cols-[380px_1fr] gap-8 max-w-7xl mx-auto">
+        {/* Contact Information - Left Side Card */}
+        <motion.div 
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative p-8 rounded-md bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f] h-fit overflow-hidden"
+        >
+          {/* Decorative Circle */}
+          <div className="absolute bottom-0 right-0 w-48 h-48 bg-gradient-to-br bg-[#766f9091] to-[#1f0c634b] rounded-full translate-x-16 translate-y-16"></div>
+          
+          <div className="relative z-10">
+            <h3 className="text-2xl font-semibold text-white mb-3">Contact Information</h3>
+            <p className="text-cyan-50 mb-10 text-sm leading-relaxed">
+              We'll create high-quality linkable content and build at least 40 high-authority.
+            </p>
+
+            {/* Contact Info Items */}
+            <div className="space-y-8">
               {contactInfo.map((item, index) => (
                 <motion.div
                   key={item.label}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className={`p-6 rounded-lg bg-[#131337d8] border border-gray-700 transition-all duration-300 ${item.color} hover:border-gray-500`}
+                  className="flex items-start gap-4"
                 >
-                  <div className="flex items-center gap-4">
-                    <motion.div
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="p-3 bg-[#1a1f2e] rounded-lg"
-                    >
-                      <item.icon className="w-6 h-6 text-blue-400" />
-                    </motion.div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-300 text-sm">{item.label}</h3>
-                      {item.href ? (
-                        <motion.a
-                          href={item.href}
-                          whileHover={{ x: 5 }}
-                          className="text-white text-lg font-medium hover:text-blue-400 transition-colors"
-                        >
-                          {item.value}
-                        </motion.a>
-                      ) : (
-                        <p className="text-white text-lg font-medium">{item.value}</p>
-                      )}
-                    </div>
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className="mt-1"
+                  >
+                    <item.icon className="w-5 h-5 text-white" />
+                  </motion.div>
+                  <div className="flex-1">
+                    {item.values.map((value, idx) => (
+                      <p key={idx} className="text-white text-sm leading-relaxed">
+                        {value}
+                      </p>
+                    ))}
                   </div>
                 </motion.div>
               ))}
             </div>
+          </div>
+        </motion.div>
 
-            {/* Social Links */}
-            <motion.div
+        {/* Contact Form - Right Side */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f] p-8 md:p-10 rounded-md shadow-lg"
+        >
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="grid md:grid-cols-2 gap-6">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                <label htmlFor="name" className="block text-xs font-medium text-gray-500 mb-2">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-0 py-3 bg-transparent border-b-2 border-gray-300 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 transition-colors"
+                  placeholder="Mr. Rahul"
+                />
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
+                <label htmlFor="email" className="block text-xs font-medium text-gray-500 mb-2">
+                  Your Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-0 py-3 bg-transparent border-b-2 border-gray-300 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 transition-colors"
+                  placeholder="hello@gmail.com"
+                />
+              </motion.div>
+            </div>
+
+            <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
             >
-              <h3 className="text-2xl font-semibold text-white mb-6">Let&apos;s Connect</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {socialLinks.map((social, index) => (
-                  <motion.a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                    className={`p-4 rounded-lg bg-[#131337d8] border border-gray-700 text-center group ${social.color} transition-all duration-300 hover:border-gray-500`}
-                  >
-                    <div className="flex flex-col items-center gap-3">
-                      <social.icon className="w-6 h-6 text-white" />
-                      <div>
-                        <div className="font-semibold text-white text-sm">{social.name}</div>
-                        <div className="text-gray-400 text-xs mt-1">{social.description}</div>
-                      </div>
-                    </div>
-                  </motion.a>
-                ))}
-              </div>
+              <label htmlFor="subject" className="block text-xs font-medium text-gray-500 mb-2">
+                Your Subject
+              </label>
+              <input
+                type="text"
+                id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                className="w-full px-0 py-3 bg-transparent border-b-2 border-gray-300 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 transition-colors"
+                placeholder="I want to hire you quickly"
+              />
             </motion.div>
 
-            {/* Availability Status */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
+            >
+              <label htmlFor="message" className="block text-xs font-medium text-cyan-500 mb-2">
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows={4}
+                className="w-full px-0 py-3 bg-transparent border-b-2 border-cyan-500 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-600 transition-colors resize-none"
+                placeholder="Write here your message"
+              />
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="p-6 rounded-lg bg-green-500/10 border border-green-500/20"
+              className="flex justify-end"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
-                <div>
-                  <h4 className="font-semibold text-white">Currently Available</h4>
-                  <p className="text-green-300 text-sm">Open for new projects and opportunities</p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <motion.form
-              onSubmit={handleSubmit}
-              className="p-6 rounded-lg bg-[#131337d8] border border-gray-700 space-y-6"
-            >
-              <h3 className="text-2xl font-semibold text-white mb-2">Send a Message</h3>
-              <p className="text-gray-400 mb-6">I&apos;ll get back to you as soon as possible.</p>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-[#1a1f2e] border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
-                    placeholder="Enter your name"
-                  />
-                </motion.div>
-
-                <motion.div 
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-[#1a1f2e] border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
-                    placeholder="your@email.com"
-                  />
-                </motion.div>
-              </div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 bg-[#1a1f2e] border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
-                  placeholder="What's this about?"
-                />
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={6}
-                  className="w-full px-4 py-3 bg-[#1a1f2e] border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors resize-none"
-                  placeholder="Tell me about your project or idea..."
-                />
-              </motion.div>
-
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-                whileHover={{ scale: 1.02, y: -1 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-blue-500/20"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="py-3 px-8 bg-blue-800 hover:bg-cyan-600 text-white font-medium rounded-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
               >
                 {isSubmitting ? (
                   <>
@@ -314,33 +231,11 @@ const ContactPage = () => {
                     Sending...
                   </>
                 ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    Send Message
-                  </>
+                  'Send Message'
                 )}
               </motion.button>
-            </motion.form>
-          </motion.div>
-        </div>
-
-        {/* Quick Note */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1 }}
-          className="text-center p-6 rounded-lg bg-[#131337d8] border border-gray-700"
-        >
-          <p className="text-gray-300 text-lg">
-            Prefer a quick chat?{' '}
-            <motion.a
-              href="mailto:hello@anmolroy.com"
-              whileHover={{ scale: 1.05 }}
-              className="text-blue-400 hover:text-blue-300 font-semibold inline-flex items-center gap-1"
-            >
-              Drop me an email <ExternalLink className="w-4 h-4" />
-            </motion.a>
-          </p>
+            </motion.div>
+          </form>
         </motion.div>
       </div>
     </div>
