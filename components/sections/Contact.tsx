@@ -68,7 +68,7 @@ const ContactPage = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-gray-300 text-sm md:text-base"
         >
-          We'll create high-quality linkable content and build at least 40 high-authority links to each asset, paving the way for you to grow your rankings, improve brand.
+          We&apos;ll create high-quality linkable content and build at least 40 high-authority links to each asset, paving the way for you to grow your rankings, improve brand.
         </motion.p>
       </div>
 

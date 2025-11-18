@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { motion, useScroll } from "framer-motion";
 import { ArrowDown, Star, MapPin, Clock, Users, Folder, ExternalLink } from "lucide-react";
 
@@ -44,7 +45,7 @@ export default function Overview() {
   const [typingComplete, setTypingComplete] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
+  useScroll({
     target: mounted ? heroRef : undefined,
     offset: ["start start", "end start"],
   });
@@ -187,7 +188,7 @@ export default function Overview() {
         <div className="container mx-auto flex max-w-4xl flex-col items-center justify-center">
           <div className="flex flex-col items-center text-center w-full">
             <h1 className="mb-0 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
-              <span className="block">Hi, I'm</span>
+              <span className="block">Hi, I&apos;m</span>
               <span className="bg-gradient-to-r from-[#60a5fa] via-[#a78bfa] to-[#60a5fa] bg-[length:200%_auto] animate-gradient text-transparent bg-clip-text">
                 <TypingAnimation
                   text="Anmol Roy"
@@ -219,7 +220,7 @@ export default function Overview() {
             <motion.h1
               className="mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight"
             >
-              <span className="block text-gray-300 mb-2">Hi, I'm</span>
+              <span className="block text-gray-300 mb-2">Hi, I&apos;m</span>
               <motion.span
                 className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
                 animate={{ backgroundPosition: ["0% center", "100% center"] }}
@@ -270,10 +271,11 @@ export default function Overview() {
               onMouseMove={handleMouseMove}
               className="relative h-56 w-56 sm:h-64 sm:w-64 md:h-72 md:w-72 lg:h-80 lg:w-80 xl:h-96 xl:w-96 overflow-hidden rounded-md border border-gray-700 bg-[#131337d8] grayscale hover:grayscale-0 cursor-pointer transition-all duration-300"
             >
-              <img
+              <Image
                 src="/images/githubdp.jpg"
                 alt="Anmol Roy"
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
 
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -503,7 +505,7 @@ export default function Overview() {
           <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">Get in Touch</h2>
           <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
             <p className="text-gray-300 text-sm sm:text-base mb-4 sm:mb-6">
-              I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Feel free to reach out!
+              I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Feel free to reach out!
             </p>
             <div className="flex flex-wrap gap-3 sm:gap-4">
               <motion.a
