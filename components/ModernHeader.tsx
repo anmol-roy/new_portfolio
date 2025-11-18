@@ -11,16 +11,18 @@ interface ModernHeaderProps {
 
 export default function ModernHeader({ activeSection, setActiveSection }: ModernHeaderProps) {
   const [isConnectOpen, setIsConnectOpen] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
 
   // Handle scroll to hide/show header
   useEffect(() => {
     let lastScrollY = window.scrollY;
     const updateScroll = () => {
-      setHidden(window.scrollY > lastScrollY && window.scrollY > 100);
-      lastScrollY = window.scrollY;
+      const currentScrollY = window.scrollY;
+      setHidden(currentScrollY > lastScrollY && currentScrollY > 100);
+      lastScrollY = currentScrollY;
     };
-    window.addEventListener("scroll", updateScroll);
+    window.addEventListener("scroll", updateScroll, { passive: true });
     return () => window.removeEventListener("scroll", updateScroll);
   }, []);
 
@@ -31,20 +33,23 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
       if (!target.closest(".connect-dropdown")) {
         setIsConnectOpen(false);
       }
+      if (!target.closest(".more-dropdown")) {
+        setIsMoreOpen(false);
+      }
     };
-    if (isConnectOpen) {
+    if (isConnectOpen || isMoreOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isConnectOpen]);
+  }, [isConnectOpen, isMoreOpen]);
 
   // Prevent background scroll when dropdown is open
   useEffect(() => {
-    document.body.style.overflow = isConnectOpen ? "hidden" : "auto";
+    document.body.style.overflow = isConnectOpen || isMoreOpen ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [isConnectOpen]);
+  }, [isConnectOpen, isMoreOpen]);
 
   const navItems = [
     {
@@ -163,6 +168,69 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
     },
   ];
 
+  const moreItems = [
+    {
+      id: "bucketlist",
+      label: "BucketList",
+      href: "/bucketlist",
+      icon: (
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+          />
+        </svg>
+      ),
+    },
+    {
+      id: "gallery",
+      label: "Gallery",
+      href: "/gallery",
+      icon: (
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+      ),
+    },
+    {
+      id: "timeline",
+      label: "TimeLine",
+      href: "/timeline",
+      icon: (
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      ),
+    },
+  ];
+
   const socialLinks = [
     {
       name: "GitHub",
@@ -215,6 +283,14 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
 
   const toggleConnectMenu = useCallback(() => {
     setIsConnectOpen((prev) => !prev);
+  }, []);
+
+  const toggleMoreMenu = useCallback(() => {
+    setIsMoreOpen((prev) => !prev);
+  }, []);
+
+  const handleMoreItemClick = useCallback(() => {
+    setIsMoreOpen(false);
   }, []);
 
   return (
@@ -340,6 +416,79 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
                             </div>
                             <span className="font-medium">{social.name}</span>
                           </motion.a>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* More Dropdown */}
+              <div className="relative more-dropdown">
+                <motion.button
+                  onClick={toggleMoreMenu}
+                  aria-haspopup="menu"
+                  aria-expanded={isMoreOpen}
+                  whileHover={{ scale: 1.05, y: -1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-3 py-2 text-sm font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-blue-500/10"
+                >
+                  <span>More</span>
+                  <motion.div
+                    animate={{ rotate: isMoreOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </motion.div>
+                </motion.button>
+
+                {/* More Dropdown Menu */}
+                <AnimatePresence>
+                  {isMoreOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 top-full mt-2 w-48 bg-[#1a0b3c] border border-white/20 rounded-lg shadow-2xl shadow-blue-500/20 backdrop-blur-xl z-50"
+                      onMouseLeave={() => setIsMoreOpen(false)}
+                    >
+                      <div className="p-3">
+                        <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
+                          More Pages
+                        </div>
+                        {moreItems.map((item, index) => (
+                          <Link key={item.id} href={item.href}>
+                            <motion.div
+                              onClick={handleMoreItemClick}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                              whileHover={{ scale: 1.02, x: 5 }}
+                              className={`flex items-center space-x-3 w-full px-3 py-3 text-sm rounded-lg transition-all duration-200 border border-transparent hover:border-white/10 cursor-pointer ${
+                                activeSection === item.id
+                                  ? "text-white bg-white/10"
+                                  : "text-white hover:bg-white/5"
+                              }`}
+                            >
+                              <div className="flex items-center justify-center w-5 h-5">
+                                {item.icon}
+                              </div>
+                              <span className="font-medium">{item.label}</span>
+                            </motion.div>
+                          </Link>
                         ))}
                       </div>
                     </motion.div>
