@@ -16,7 +16,6 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Enhanced scroll handling with smoother animation
@@ -33,7 +32,6 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
       // Only update if scroll difference is significant enough
       if (Math.abs(currentScrollY - lastScrollY) > 5) {
         setHidden(currentScrollY > lastScrollY && currentScrollY > 100);
-        setLastScrollY(currentScrollY);
         lastScrollY = currentScrollY;
       }
       

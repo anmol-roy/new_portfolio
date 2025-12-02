@@ -50,12 +50,12 @@ export default function SerpentineWaveWithStars() {
     };
 
     // Throttle mouse movement to avoid too many stars
-    let timeout: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout | null = null;
     const throttledMouseMove = (e: MouseEvent) => {
       if (!timeout) {
         timeout = setTimeout(() => {
           handleMouseMove(e);
-          timeout = null as any;
+          timeout = null;
         }, 50);
       }
     };
