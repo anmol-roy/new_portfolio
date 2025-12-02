@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -15,17 +16,39 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Handle scroll to hide/show header
+  // Enhanced scroll handling with smoother animation
   useEffect(() => {
+    let ticking = false;
     let lastScrollY = window.scrollY;
+
     const updateScroll = () => {
       const currentScrollY = window.scrollY;
-      setHidden(currentScrollY > lastScrollY && currentScrollY > 100);
-      lastScrollY = currentScrollY;
+      
+      // Check if scrolled past a certain point (for half-sticky effect)
+      setIsScrolled(currentScrollY > 100);
+      
+      // Only update if scroll difference is significant enough
+      if (Math.abs(currentScrollY - lastScrollY) > 5) {
+        setHidden(currentScrollY > lastScrollY && currentScrollY > 100);
+        setLastScrollY(currentScrollY);
+        lastScrollY = currentScrollY;
+      }
+      
+      ticking = false;
     };
-    window.addEventListener("scroll", updateScroll, { passive: true });
-    return () => window.removeEventListener("scroll", updateScroll);
+
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateScroll);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // Close dropdown when clicking outside
@@ -39,6 +62,7 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
         setIsMoreOpen(false);
       }
     };
+
     if (isConnectOpen || isMoreOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
@@ -304,13 +328,31 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
     setIsMobileMenuOpen(false);
   }, [setActiveSection]);
 
+  // Check if we're not on the overview section (home)
+  const isNotOverview = activeSection !== "overview";
+
   return (
     <>
+      {/* Main Header */}
       <motion.header
         initial={{ y: -100, opacity: 0 }}
-        animate={{ y: hidden ? -100 : 0, opacity: 1 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-gradient-to-b from-[#0a0339]/95 to-[#0a0339]/70 border-b border-white/20"
+        animate={{ 
+          y: hidden ? -100 : 0, 
+          opacity: 1
+        }}
+        transition={{ 
+          duration: 0.4, 
+          ease: [0.25, 0.46, 0.45, 0.94],
+          type: "spring",
+          stiffness: 200,
+          damping: 25
+        }}
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-gradient-to-b from-[#0a0339]/95 to-[#0a0339]/70 border-b border-white/20 shadow-2xl shadow-blue-500/10"
+        style={{
+          transform: "translate3d(0, 0, 0)",
+          backfaceVisibility: "hidden",
+          perspective: 1000,
+        }}
       >
         {/* Desktop & Tablet Layout */}
         <div className="hidden md:block">
@@ -513,7 +555,7 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
             </div>
           </div>
 
-          {/* Desktop Navigation - Hide on small tablets */}
+          {/* Desktop Navigation - Always visible on desktop */}
           <div className="hidden lg:block">
             <div className="flex items-center justify-items-start mx-3 h-10">
               <nav aria-label="Main navigation">
@@ -670,6 +712,58 @@ export default function ModernHeader({ activeSection, setActiveSection }: Modern
           </div>
         </div>
       </motion.header>
+
+      {/* Half-Sticky Navigation Bar - Shows when not on overview and scrolled */}
+      <AnimatePresence>
+        {isNotOverview && isScrolled && (
+          <motion.div
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ 
+              duration: 0.3,
+              ease: "easeOut"
+            }}
+            className="fixed top-4 left-1/2 transform -translate-x-1/2 z-40 hidden lg:block"
+          >
+            <div className="bg-black/40 backdrop-blur-xl border border-white/20 rounded-2xl px-6 py-3 shadow-2xl shadow-blue-500/10">
+              <nav aria-label="Sticky navigation">
+                <ul className="flex items-center space-x-1">
+                  {navItems.map((item) => (
+                    <li key={item.id}>
+                      <motion.button
+                        onClick={() => setActiveSection(item.id)}
+                        whileHover={{ scale: 1.05, y: -1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 flex items-center space-x-2 rounded-lg ${
+                          activeSection === item.id
+                            ? "text-white bg-white/10"
+                            : "text-gray-300 hover:text-white hover:bg-white/5"
+                        }`}
+                        aria-current={activeSection === item.id ? "page" : undefined}
+                      >
+                        {item.icon}
+                        <span className="font-medium">{item.label}</span>
+                        {activeSection === item.id && (
+                          <motion.div
+                            layoutId="stickyActiveSection"
+                            className="absolute inset-0 border border-white/30 rounded-lg bg-white/5"
+                            transition={{
+                              type: "spring",
+                              bounce: 0.2,
+                              duration: 0.4,
+                            }}
+                          />
+                        )}
+                      </motion.button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>

@@ -315,13 +315,14 @@ export default function Overview() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
+          
         >
           <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 sm:mb-6">Overview</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
             {quickStats.map((stat, index) => (
               <motion.div
                 key={stat.label}
-                className="text-center p-3 sm:p-4 rounded-md bg-[#131337d8] border border-gray-700"
+                className="text-center p-3 sm:p-4 rounded-md bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f70] to-[#1f096f7f]"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -348,7 +349,7 @@ export default function Overview() {
             {pinnedProjects.map((project, index) => (
               <motion.div
                 key={project.title}
-                className="border border-gray-700 rounded-md p-4 sm:p-5 bg-[#131337d8] hover:border-gray-500 transition-colors"
+                className=" border-gray-700 rounded-md p-4 sm:p-5 bg-gradient-to-br border-1  bg-[#1f096f20] to-[#17094c9f] hover:border-gray-500 transition-colors"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -392,7 +393,7 @@ export default function Overview() {
           viewport={{ once: true }}
         >
           <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">Current Focus</h2>
-          <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
+          <div className=" rounded-md p-4 sm:p-6 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f]">
             <ul className="text-gray-300 space-y-2 sm:space-y-3">
               {currentFocus.map((focus, index) => (
                 <motion.li
@@ -419,7 +420,7 @@ export default function Overview() {
           viewport={{ once: true }}
         >
           <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 sm:mb-6">Skills</h2>
-          <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
+          <div className=" rounded-md p-4 sm:p-6 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f]">
             <div className="flex flex-wrap gap-2 sm:gap-3">
               {techStack.map((tech, index) => (
                 <motion.div
@@ -446,7 +447,7 @@ export default function Overview() {
           viewport={{ once: true }}
         >
           <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">Recent Activity</h2>
-          <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
+          <div className=" rounded-md p-4 sm:p-6 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f]">
             <div className="space-y-3 sm:space-y-4">
               {activities.map((activity, index) => (
                 <motion.div
@@ -476,7 +477,7 @@ export default function Overview() {
           viewport={{ once: true }}
         >
           <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">Achievements</h2>
-          <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
+          <div className=" rounded-md p-4 sm:p-6 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f]">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {achievements.map((achievement, index) => (
                 <motion.div
@@ -503,7 +504,7 @@ export default function Overview() {
           viewport={{ once: true }}
         >
           <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">Get in Touch</h2>
-          <div className="border border-gray-700 rounded-md p-4 sm:p-6 bg-[#131337d8]">
+          <div className="rounded-md p-4 sm:p-6 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f]">
             <p className="text-gray-300 text-sm sm:text-base mb-4 sm:mb-6">
               I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Feel free to reach out!
             </p>

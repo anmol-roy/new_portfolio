@@ -2,12 +2,67 @@
 import { motion } from "framer-motion";
 import { useEffect, useState, useMemo } from "react";
 
+interface CursorStar {
+  id: number;
+  x: number;
+  y: number;
+  targetX: number;
+  targetY: number;
+  opacity: number;
+  size: number;
+  color: string;
+}
+
 export default function SerpentineWaveWithStars() {
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
+  const [cursorStars, setCursorStars] = useState<CursorStar[]>([]);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     setIsHydrated(true);
   }, []);
+
+  // Track mouse movement
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+      
+      // Create new cursor star
+      const newStar: CursorStar = {
+        id: Date.now() + Math.random(),
+        x: e.clientX,
+        y: e.clientY,
+        targetX: e.clientX,
+        targetY: e.clientY,
+        opacity: 0.8,
+        size: 2 + Math.random() * 2,
+        color: Math.random() > 0.5 ? '#C084FC' : '#A855F7',
+      };
+
+      setCursorStars(prev => [...prev, newStar]);
+
+      // Remove star after animation completes
+      setTimeout(() => {
+        setCursorStars(prev => prev.filter(star => star.id !== newStar.id));
+      }, 2000);
+    };
+
+    // Throttle mouse movement to avoid too many stars
+    let timeout: NodeJS.Timeout;
+    const throttledMouseMove = (e: MouseEvent) => {
+      if (!timeout) {
+        timeout = setTimeout(() => {
+          handleMouseMove(e);
+          timeout = null as any;
+        }, 50);
+      }
+    };
+
+    window.addEventListener('mousemove', throttledMouseMove);
+    return () => window.removeEventListener('mousemove', throttledMouseMove);
+  }, [isHydrated]);
 
   // Generate static paths with consistent precision
   const generateStaticPath = (
@@ -60,14 +115,8 @@ export default function SerpentineWaveWithStars() {
       <div className="fixed inset-0 -z-10 overflow-hidden bg-[#050329]">
         <div className="absolute inset-0 bg-gradient-to-b from-[#050329] to-[#0B0636] opacity-90" />
         
-        {/* Static SVG waves */}
         <div className="absolute left-0 right-0 top-[65%] h-[35%] w-full opacity-0">
-          <svg
-            className="absolute h-full w-full"
-            preserveAspectRatio="none"
-            viewBox="0 0 2880 800"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg className="absolute h-full w-full" preserveAspectRatio="none" viewBox="0 0 2880 800" xmlns="http://www.w3.org/2000/svg">
             {Array.from({ length: 15 }).map((_, i) => {
               const baseY = 500 + i * 4;
               const amplitude = 40 - i * 0.5;
@@ -75,17 +124,7 @@ export default function SerpentineWaveWithStars() {
               const phase = i * 0.2;
               const staticPath = generateStaticPath(baseY, amplitude, frequency, phase);
 
-              return (
-                <path
-                  key={`blue-wave-static-${i}`}
-                  d={staticPath}
-                  fill="none"
-                  stroke={`url(#blueGradient${i})`}
-                  strokeWidth="0.7"
-                  strokeOpacity={0.85 - i * 0.02}
-                  opacity="0"
-                />
-              );
+              return <path key={`blue-wave-static-${i}`} d={staticPath} fill="none" stroke={`url(#blueGradient${i})`} strokeWidth="0.7" strokeOpacity={0.85 - i * 0.02} opacity="0" />;
             })}
 
             {Array.from({ length: 25 }).map((_, i) => {
@@ -95,17 +134,7 @@ export default function SerpentineWaveWithStars() {
               const phase = i * 0.2 + Math.PI;
               const staticPath = generateStaticPath(baseY, amplitude, frequency, phase);
 
-              return (
-                <path
-                  key={`purple-wave-static-${i}`}
-                  d={staticPath}
-                  fill="none"
-                  stroke={`url(#purpleGradient${i})`}
-                  strokeWidth="0.7"
-                  strokeOpacity={0.85 - i * 0.02}
-                  opacity="0"
-                />
-              );
+              return <path key={`purple-wave-static-${i}`} d={staticPath} fill="none" stroke={`url(#purpleGradient${i})`} strokeWidth="0.7" strokeOpacity={0.85 - i * 0.02} opacity="0" />;
             })}
 
             {Array.from({ length: 15 }).map((_, i) => {
@@ -115,112 +144,40 @@ export default function SerpentineWaveWithStars() {
               const phase = i * 0.15 + Math.PI * 0.5;
               const staticPath = generateStaticPath(baseY, amplitude, frequency, phase);
 
-              return (
-                <path
-                  key={`lower-wave-static-${i}`}
-                  d={staticPath}
-                  fill="none"
-                  stroke={`url(#lowerGradient${i})`}
-                  strokeWidth="1.2"
-                  strokeOpacity={0.9 - i * 0.015} 
-                  opacity="0"
-                />
-              );
+              return <path key={`lower-wave-static-${i}`} d={staticPath} fill="none" stroke={`url(#lowerGradient${i})`} strokeWidth="1.2" strokeOpacity={0.9 - i * 0.015} opacity="0" />;
             })}
 
             <defs>
               {Array.from({ length: 15 }).map((_, i) => {
                 const blueColor = `rgb(${40 + i * 2}, ${10 + i * 0.5}, ${220 - i * 2})`;
                 const purpleColor = `rgb(${170 - i * 1}, ${30 + i * 0.8}, ${210 - i * 1})`;
-
-                return (
-                  <linearGradient
-                    key={`blueGradient${i}`}
-                    id={`blueGradient${i}`}
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="0%"
-                  >
-                    <stop offset="0%" stopColor={blueColor} />
-                    <stop offset="100%" stopColor={purpleColor} />
-                  </linearGradient>
-                );
+                return <linearGradient key={`blueGradient${i}`} id={`blueGradient${i}`} x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor={blueColor} /><stop offset="100%" stopColor={purpleColor} /></linearGradient>;
               })}
-
               {Array.from({ length: 15 }).map((_, i) => {
                 const purpleColor = `rgb(${140 + i * 1.5}, ${40 + i * 0.8}, ${200 - i * 1})`;
                 const cyanColor = `rgb(${20 + i * 1}, ${150 + i * 1.5}, ${210 - i * 0.5})`;
-
-                return (
-                  <linearGradient
-                    key={`purpleGradient${i}`}
-                    id={`purpleGradient${i}`}
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="0%"
-                  >
-                    <stop offset="0%" stopColor={purpleColor} />
-                    <stop offset="100%" stopColor={cyanColor} />
-                  </linearGradient>
-                );
+                return <linearGradient key={`purpleGradient${i}`} id={`purpleGradient${i}`} x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor={purpleColor} /><stop offset="100%" stopColor={cyanColor} /></linearGradient>;
               })}
-
               {Array.from({ length: 15 }).map((_, i) => {
                 const tealColor = `rgb(${20 + i * 1}, ${140 + i * 1.5}, ${180 - i * 1})`;
                 const deepBlueColor = `rgb(${10 + i * 0.5}, ${50 + i * 1}, ${160 - i * 0.8})`;
-
-                return (
-                  <linearGradient
-                    key={`lowerGradient${i}`}
-                    id={`lowerGradient${i}`}
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="0%"
-                  >
-                    <stop offset="0%" stopColor={tealColor} />
-                    <stop offset="100%" stopColor={deepBlueColor} />
-                  </linearGradient>
-                );
+                return <linearGradient key={`lowerGradient${i}`} id={`lowerGradient${i}`} x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor={tealColor} /><stop offset="100%" stopColor={deepBlueColor} /></linearGradient>;
               })}
             </defs>
           </svg>
         </div>
 
-        {/* Static stars preview - only show if we have stars data */}
-{/* Static stars preview - only show if we have stars data */}
-{stars.length > 0 && (
-  <div className="absolute inset-0 opacity-0">
-    {stars.slice(0, 20).map((star) => (
-      <div
-        key={`star-static-${star.id}`}
-        className="absolute"
-        style={{
-          width: star.size * 3,
-          height: star.size * 3,
-          left: `${star.left}%`,
-          top: `${star.top}%`,
-          opacity: star.opacity,
-        }}
-      >
-        <svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-            fill={star.color}
-          />
-        </svg>
-      </div>
-    ))}
-  </div>
-)}
+        {stars.length > 0 && (
+          <div className="absolute inset-0 opacity-0">
+            {stars.slice(0, 20).map((star) => (
+              <div key={`star-static-${star.id}`} className="absolute" style={{ width: star.size * 3, height: star.size * 3, left: `${star.left}%`, top: `${star.top}%`, opacity: star.opacity }}>
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill={star.color} />
+                </svg>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -230,21 +187,8 @@ export default function SerpentineWaveWithStars() {
     <div className="fixed inset-0 -z-10 overflow-hidden bg-[#050329]">
       <div className="absolute inset-0 bg-gradient-to-b from-[#050329] to-[#0B0636] opacity-90" />
 
-      {/* Animated waves */}
-      <motion.div
-        className="absolute left-0 right-0 top-[65%] h-[35%] w-full"
-        
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-      >
-        <svg
-          className="absolute h-full w-full"
-          preserveAspectRatio="none"
-          viewBox="0 0 2880 800"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Blue waves */}
+      <motion.div className="absolute left-0 right-0 top-[65%] h-[35%] w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.5, ease: "easeOut" }}>
+        <svg className="absolute h-full w-full" preserveAspectRatio="none" viewBox="0 0 2880 800" xmlns="http://www.w3.org/2000/svg">
           {Array.from({ length: 15 }).map((_, i) => {
             const baseY = 500 + i * 4;
             const amplitude = 40 - i * 0.5;
@@ -253,35 +197,13 @@ export default function SerpentineWaveWithStars() {
             const staticPath = generateStaticPath(baseY, amplitude, frequency, phase);
 
             return (
-              <motion.path
-                key={`blue-wave-${i}`}
-                d={staticPath}
-                fill="none"
-                stroke={`url(#blueGradient${i})`}
-                strokeWidth="0.7"
-                strokeOpacity={0.85 - i * 0.02}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{
-                  opacity: { duration: 1, delay: i * 0.03 },
-                }}
-              >
-                <animateMotion
-                  dur={`${10 + i * 0.3}s`}
-                  repeatCount="indefinite"
-                  path="M0,0 Q40,5 80,0 T160,0"
-                />
-                <animate
-                  attributeName="d"
-                  dur="0.1s"
-                  repeatCount="indefinite"
-                  values={staticPath}
-                />
+              <motion.path key={`blue-wave-${i}`} d={staticPath} fill="none" stroke={`url(#blueGradient${i})`} strokeWidth="0.7" strokeOpacity={0.85 - i * 0.02} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ opacity: { duration: 1, delay: i * 0.03 } }}>
+                <animateMotion dur={`${10 + i * 0.3}s`} repeatCount="indefinite" path="M0,0 Q40,5 80,0 T160,0" />
+                <animate attributeName="d" dur="0.1s" repeatCount="indefinite" values={staticPath} />
               </motion.path>
             );
           })}
 
-          {/* Purple waves */}
           {Array.from({ length: 15 }).map((_, i) => {
             const baseY = 550 + i * 4;
             const amplitude = 40 - i * 0.5;
@@ -290,35 +212,13 @@ export default function SerpentineWaveWithStars() {
             const staticPath = generateStaticPath(baseY, amplitude, frequency, phase);
 
             return (
-              <motion.path
-                key={`purple-wave-${i}`}
-                d={staticPath}
-                fill="none"
-                stroke={`url(#purpleGradient${i})`}
-                strokeWidth="0.7"
-                strokeOpacity={0.85 - i * 0.02}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{
-                  opacity: { duration: 1, delay: 0.5 + i * 0.03 },
-                }}
-              >
-                <animateMotion
-                  dur={`${12 + i * 0.3}s`}
-                  repeatCount="indefinite"
-                  path="M0,0 Q40,5 80,0 T160,0"
-                />
-                <animate
-                  attributeName="d"
-                  dur={`${8 + i * 0.3}s`}
-                  repeatCount="indefinite"
-                  values={staticPath}
-                />
+              <motion.path key={`purple-wave-${i}`} d={staticPath} fill="none" stroke={`url(#purpleGradient${i})`} strokeWidth="0.7" strokeOpacity={0.85 - i * 0.02} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ opacity: { duration: 1, delay: 0.5 + i * 0.03 } }}>
+                <animateMotion dur={`${12 + i * 0.3}s`} repeatCount="indefinite" path="M0,0 Q40,5 80,0 T160,0" />
+                <animate attributeName="d" dur={`${8 + i * 0.3}s`} repeatCount="indefinite" values={staticPath} />
               </motion.path>
             );
           })}
 
-          {/* Lower waves */}
           {Array.from({ length: 15 }).map((_, i) => {
             const baseY = 600 + i * 4;
             const amplitude = 40 - i * 0.5;
@@ -327,30 +227,9 @@ export default function SerpentineWaveWithStars() {
             const staticPath = generateStaticPath(baseY, amplitude, frequency, phase);
 
             return (
-              <motion.path
-                key={`lower-wave-${i}`}
-                d={staticPath}
-                fill="none"
-                stroke={`url(#lowerGradient${i})`}
-                strokeWidth="0.7"
-                strokeOpacity={0.85 - i * 0.02}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{
-                  opacity: { duration: 1, delay: 0.7 + i * 0.03 },
-                }}
-              >
-                <animateMotion
-                  dur={`${14 + i * 0.4}s`}
-                  repeatCount="indefinite"
-                  path="M0,0 Q60,6 120,0 T240,0"
-                />
-                <animate
-                  attributeName="d"
-                  dur={`${9 + i * 0.35}s`}
-                  repeatCount="indefinite"
-                  values={staticPath}
-                />
+              <motion.path key={`lower-wave-${i}`} d={staticPath} fill="none" stroke={`url(#lowerGradient${i})`} strokeWidth="0.7" strokeOpacity={0.85 - i * 0.02} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ opacity: { duration: 1, delay: 0.7 + i * 0.03 } }}>
+                <animateMotion dur={`${14 + i * 0.4}s`} repeatCount="indefinite" path="M0,0 Q60,6 120,0 T240,0" />
+                <animate attributeName="d" dur={`${9 + i * 0.35}s`} repeatCount="indefinite" values={staticPath} />
               </motion.path>
             );
           })}
@@ -359,62 +238,75 @@ export default function SerpentineWaveWithStars() {
             {Array.from({ length: 15 }).map((_, i) => {
               const blueColor = `rgb(${40 + i * 2}, ${10 + i * 0.5}, ${220 - i * 2})`;
               const purpleColor = `rgb(${170 - i * 1}, ${30 + i * 0.8}, ${210 - i * 1})`;
-
-              return (
-                <linearGradient
-                  key={`blueGradient${i}`}
-                  id={`blueGradient${i}`}
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="0%"
-                >
-                  <stop offset="0%" stopColor={blueColor} />
-                  <stop offset="100%" stopColor={purpleColor} />
-                </linearGradient>
-              );
+              return <linearGradient key={`blueGradient${i}`} id={`blueGradient${i}`} x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor={blueColor} /><stop offset="100%" stopColor={purpleColor} /></linearGradient>;
             })}
-
             {Array.from({ length: 15 }).map((_, i) => {
               const purpleColor = `rgb(${140 + i * 1.5}, ${40 + i * 0.8}, ${200 - i * 1})`;
               const cyanColor = `rgb(${20 + i * 1}, ${150 + i * 1.5}, ${210 - i * 0.5})`;
-
-              return (
-                <linearGradient
-                  key={`purpleGradient${i}`}
-                  id={`purpleGradient${i}`}
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="0%"
-                >
-                  <stop offset="0%" stopColor={purpleColor} />
-                  <stop offset="100%" stopColor={cyanColor} />
-                </linearGradient>
-              );
+              return <linearGradient key={`purpleGradient${i}`} id={`purpleGradient${i}`} x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor={purpleColor} /><stop offset="100%" stopColor={cyanColor} /></linearGradient>;
             })}
-
             {Array.from({ length: 15 }).map((_, i) => {
               const tealColor = `rgb(${20 + i * 1}, ${140 + i * 1.5}, ${180 - i * 1})`;
               const deepBlueColor = `rgb(${10 + i * 0.5}, ${50 + i * 1}, ${160 - i * 0.8})`;
-
-              return (
-                <linearGradient
-                  key={`lowerGradient${i}`}
-                  id={`lowerGradient${i}`}
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="0%"
-                >
-                  <stop offset="0%" stopColor={tealColor} />
-                  <stop offset="100%" stopColor={deepBlueColor} />
-                </linearGradient>
-              );
+              return <linearGradient key={`lowerGradient${i}`} id={`lowerGradient${i}`} x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor={tealColor} /><stop offset="100%" stopColor={deepBlueColor} /></linearGradient>;
             })}
           </defs>
         </svg>
       </motion.div>
+
+      {/* Cursor trail stars */}
+      <div className="absolute inset-0 pointer-events-none">
+        {cursorStars.map((star) => (
+          <motion.div
+            key={`cursor-star-${star.id}`}
+            className="absolute"
+            style={{
+              width: star.size * 4,
+              height: star.size * 4,
+              left: star.x,
+              top: star.y,
+            }}
+            initial={{ 
+              opacity: 0,
+              scale: 0,
+              x: -star.size * 2,
+              y: -star.size * 2,
+            }}
+            animate={{
+              x: mousePos.x - star.x - star.size * 2,
+              y: mousePos.y - star.y - star.size * 2,
+              opacity: [0, star.opacity, 0],
+              scale: [0, 1, 0],
+            }}
+            transition={{
+              x: {
+                duration: 0.8,
+                delay: 0.33,
+                ease: "easeOut",
+              },
+              y: {
+                duration: 0.8,
+                delay: 0.33,
+                ease: "easeOut",
+              },
+              opacity: {
+                duration: 2,
+                times: [0, 0.2, 1],
+                ease: "easeInOut",
+              },
+              scale: {
+                duration: 2,
+                times: [0, 0.3, 1],
+                ease: "easeOut",
+              },
+            }}
+          >
+            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill={star.color} />
+            </svg>
+          </motion.div>
+        ))}
+      </div>
 
       {/* Improved star particles */}
       <div className="absolute inset-0">
@@ -466,17 +358,8 @@ export default function SerpentineWaveWithStars() {
               },
             }}
           >
-            <svg
-              width="100%"
-              height="100%"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                fill={star.color}
-              />
+            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill={star.color} />
             </svg>
           </motion.div>
         ))}

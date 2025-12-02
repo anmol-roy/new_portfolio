@@ -15,6 +15,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Anmol Roy",
   description: "Portfolio of Anmol Roy - Full-Stack Developer and Tech Enthusiast",
+  icons: {
+    icon: [
+      { url: "/images/mylogo.svg", type: "image/svg+xml" },
+    ],
+  },
 };
 
 export default function RootLayout({

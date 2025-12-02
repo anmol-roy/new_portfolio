@@ -452,7 +452,7 @@ export default function ProjectsPage() {
             {quickStats.map((stat, index) => (
               <motion.div
                 key={stat.label}
-                className="text-center p-4 rounded-md bg-[#131337d8] border border-gray-700"
+                className="text-center p-4 rounded-md bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f]"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -482,7 +482,7 @@ export default function ProjectsPage() {
                 placeholder="Search projects..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-[#131337d8] border border-gray-700 rounded-md text-gray-300 placeholder-gray-500 focus:outline-none focus:border-gray-600 text-sm"
+                className="w-full pl-10 pr-4 py-3 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f] rounded-md text-gray-300 placeholder-gray-500 focus:outline-none focus:border-gray-600 text-sm"
               />
             </div>
 
@@ -495,7 +495,7 @@ export default function ProjectsPage() {
                     onClick={() => setShowSkillDropdown((prev) => !prev)}
                     whileHover={{ scale: 1.05, y: -1 }}
                     whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#131337d8] border border-gray-700 rounded-md text-gray-200 hover:bg-[#1a1f2e] transition-colors whitespace-nowrap"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f] rounded-md text-gray-200 hover:bg-[#1a1f2e] transition-colors whitespace-nowrap"
                   >
                     <Filter className="w-4 h-4" />
                     <span>Skills</span>
@@ -517,7 +517,7 @@ export default function ProjectsPage() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute top-full mt-2 left-0 w-64 bg-[#131337d8] border border-gray-700 rounded-md shadow-2xl z-50"
+                        className="absolute top-full mt-2 left-0 w-64 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f] rounded-md shadow-2xl z-50"
                       >
                         <div className="p-2 border-b border-gray-700">
                           <input
@@ -562,7 +562,7 @@ export default function ProjectsPage() {
                       whileHover={{ scale: 1.05, y: -1 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={resetFilters}
-                      className="flex items-center gap-2 px-3 py-2 bg-[#131337d8] border border-gray-700 rounded-md text-gray-200 hover:bg-[#1a1f2e] transition-colors whitespace-nowrap text-sm"
+                      className="flex items-center gap-2 px-3 py-2 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f] rounded-md text-gray-200 hover:bg-[#1a1f2e] transition-colors whitespace-nowrap text-sm"
                     >
                       <X className="w-4 h-4" />
                       <span>Reset</span>
@@ -583,7 +583,7 @@ export default function ProjectsPage() {
                         exit={{ opacity: 0, scale: 0.8, y: -20 }}
                         transition={{ delay: index * 0.1 }}
                         whileHover={{ scale: 1.05, y: -1 }}
-                        className="flex items-center gap-1 px-3 py-1 bg-blue-900/30 text-blue-300 rounded-md text-xs font-medium whitespace-nowrap flex-shrink-0 border border-blue-800/50"
+                        className="flex items-center gap-1 px-3 py-1 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f] text-blue-300 rounded-md text-xs font-medium whitespace-nowrap flex-shrink-0 "
                       >
                         <span>{skill}</span>
                         <motion.button
@@ -608,7 +608,7 @@ export default function ProjectsPage() {
                   onClick={() => setShowSortDropdown((prev) => !prev)}
                   whileHover={{ scale: 1.05, y: -1 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex items-center gap-3 px-4 py-3 bg-[#131337d8] border border-gray-700 rounded-md text-gray-200 hover:bg-[#1a1f2e] transition-colors min-w-[200px] justify-between whitespace-nowrap"
+                  className="flex items-center gap-3 px-4 py-3 bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f] rounded-md text-gray-200 hover:bg-[#1a1f2e] transition-colors min-w-[200px] justify-between whitespace-nowrap"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-gray-400 text-sm">Sort by</span>
@@ -629,10 +629,11 @@ export default function ProjectsPage() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full mt-2 right-0 w-full bg-[#131337d8] border border-gray-700 rounded-md shadow-2xl z-50"
+                      className="absolute top-full mt-2 right-0 w-full bg-gradient-to-br border-1 border-gray-700 bg-[#1f096f20] to-[#1f096f9f] rounded-md shadow-2xl z-50"
                     >
                       {sortOptions.map((option, index) => (
                         <motion.button
+
                           key={option}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
@@ -642,7 +643,7 @@ export default function ProjectsPage() {
                             setShowSortDropdown(false);
                           }}
                           className="w-full px-4 py-3 text-left hover:bg-[#1a1f2e] transition-colors text-gray-300 first:rounded-t-md last:rounded-b-md text-sm"
-                        >
+                        >                                             
                           {option}
                         </motion.button>
                       ))}
